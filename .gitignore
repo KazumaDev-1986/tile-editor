@@ -1,0 +1,9 @@
+# Folders
+obj
+tools
+
+# Files
+*.o
+*.exe
+alpha-centauri
+logs.txt

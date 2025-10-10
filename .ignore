@@ -1,0 +1,8 @@
+# Folders
+obj
+src/lib
+
+# Files
+*.o
+*.exe
+tile-editor
