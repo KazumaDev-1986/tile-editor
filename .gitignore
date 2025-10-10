@@ -5,5 +5,5 @@ tools
 # Files
 *.o
 *.exe
-alpha-centauri
+tile-editor
 logs.txt

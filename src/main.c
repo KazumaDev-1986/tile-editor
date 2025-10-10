@@ -1,6 +1,11 @@
-#include <stdio.h>
+#include "include/app.h"
 
 int main(void) {
-  printf("Hello, world!\n");
+  App *app = app_create();
+  if (app) {
+    app_run(app);
+    app_destroy(&app);
+  }
+
   return 0;
 }
