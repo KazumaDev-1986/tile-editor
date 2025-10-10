@@ -2,8 +2,11 @@
 
 #include "include/app.h"
 #include "include/config.h"
+#include "include/package.h"
 #include "include/raylib.h"
 #include "include/screen.h"
+
+Package *globalPackage = NULL;
 
 // **************************************************
 // Static functions declaration.
@@ -25,8 +28,13 @@ App *app_create(void) {
     return NULL;
   }
   _initialize_raylib();
-  app->currentScreen = NULL;
-  _screen_change(&app->currentScreen, SCREEN_TYPE_CANVAS);
+  globalPackage = package_create();
+  if (!globalPackage) {
+    app_destroy(&app);
+  } else {
+    app->currentScreen = NULL;
+    _screen_change(&app->currentScreen, SCREEN_TYPE_CANVAS);
+  }
 
   return app;
 }
@@ -48,6 +56,7 @@ void app_run(App *const app) {
 void app_destroy(App **ptrApp) {
   if (ptrApp && *ptrApp) {
     _screen_destroy(&(*ptrApp)->currentScreen);
+    package_destroy(&globalPackage);
     _finalize_raylib();
     MemFree(*ptrApp);
     *ptrApp = NULL;
@@ -58,6 +67,9 @@ void app_destroy(App **ptrApp) {
 // Static functions implementation.
 // **************************************************
 static void _initialize_raylib(void) {
+#if defined(TILE_EDITOR_DEBUG)
+  SetTraceLogLevel(LOG_DEBUG);
+#endif
   InitWindow(TILE_EDITOR_SCREEN_WIDTH, TILE_EDITOR_SCREEN_HEIGHT,
              TILE_EDITOR_TITLE);
 }

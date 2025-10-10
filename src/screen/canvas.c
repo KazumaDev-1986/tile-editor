@@ -24,7 +24,9 @@ void canvas_update(Screen *const screen) {
   // TODO
 }
 
-void canvas_draw(const Screen *const screen) { ClearBackground(RED); }
+void canvas_draw(const Screen *const screen) {
+  ClearBackground(TILE_EDITOR_COLOR_BLUE_LIGHT);
+}
 
 ScreenType canvas_next_screen(void) { return __nextScreen; }
 
