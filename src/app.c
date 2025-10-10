@@ -6,6 +6,9 @@
 #include "include/raylib.h"
 #include "include/screen.h"
 
+#define RAYGUI_IMPLEMENTATION
+#include "include/raygui.h"
+
 Package *globalPackage = NULL;
 
 // **************************************************
@@ -70,6 +73,11 @@ static void _initialize_raylib(void) {
 #if defined(TILE_EDITOR_DEBUG)
   SetTraceLogLevel(LOG_DEBUG);
 #endif
+
+#if defined(TILE_EDITOR_SCREEN_RESIZABLE)
+  SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+#endif
+
   InitWindow(TILE_EDITOR_SCREEN_WIDTH, TILE_EDITOR_SCREEN_HEIGHT,
              TILE_EDITOR_TITLE);
 }

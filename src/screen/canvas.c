@@ -1,5 +1,6 @@
 #include <stddef.h>
 
+#include "../include/raygui.h"
 #include "../include/raylib.h"
 #include "../include/screen.h"
 
@@ -25,7 +26,7 @@ void canvas_update(Screen *const screen) {
 }
 
 void canvas_draw(const Screen *const screen) {
-  ClearBackground(TILE_EDITOR_COLOR_BLUE_LIGHT);
+  ClearBackground(TILE_EDITOR_COLOR_GRAY_LIGHT);
 }
 
 ScreenType canvas_next_screen(void) { return __nextScreen; }
