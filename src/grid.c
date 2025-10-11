@@ -1,8 +1,11 @@
 #include <stddef.h>
 
+#include "include/app_state.h"
 #include "include/config.h"
 #include "include/grid.h"
 #include "include/raylib.h"
+
+extern AppState *globalAppState;
 
 // **************************************************
 // Static functions declaration.
@@ -98,18 +101,18 @@ static void _destroy_squares(Square **ptrSquare) {
 
 static void _load_canvas(Grid *const grid) {
   if (grid) {
-    int32_t screenWidth = GetScreenWidth();
-    int32_t screenHeight = GetScreenHeight();
+    int32_t screenWidth = globalAppState->screenWidth;
+    int32_t screenHeight = globalAppState->screenHeight;
     grid->canvas = LoadRenderTexture(screenWidth, screenHeight);
 
     BeginTextureMode(grid->canvas);
-    ClearBackground(TILE_EDITOR_COLOR_GRAY_LIGHT);
+    // ClearBackground(TILE_EDITOR_COLOR_GRAY_LIGHT);
     for (size_t i = 0; i < grid->height; ++i) {
       for (size_t j = 0; j < grid->width; ++j) {
         int32_t posX = (int32_t)grid->buffer[i * grid->width + j].x;
         int32_t posY = (int32_t)grid->buffer[i * grid->width + j].y;
         DrawRectangleLines(posX, posY, grid->side, grid->side,
-                           TILE_EDITOR_COLOR_PURPLE_DARK);
+                           TILE_EDITOR_COLOR_PINK_LIGHT);
       }
     }
     EndTextureMode();

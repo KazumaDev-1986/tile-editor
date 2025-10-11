@@ -1,6 +1,7 @@
 #include <stddef.h>
 
 #include "include/app.h"
+#include "include/app_state.h"
 #include "include/config.h"
 #include "include/package.h"
 #include "include/raylib.h"
@@ -9,6 +10,7 @@
 #define RAYGUI_IMPLEMENTATION
 #include "include/raygui.h"
 
+AppState *globalAppState = NULL;
 Package *globalPackage = NULL;
 
 // **************************************************
@@ -32,18 +34,21 @@ App *app_create(void) {
   }
   _initialize_raylib();
   globalPackage = package_create();
-  if (!globalPackage) {
+  globalAppState = appState_create();
+  if (!globalPackage || !globalAppState) {
     app_destroy(&app);
-  } else {
-    app->currentScreen = NULL;
-    _screen_change(&app->currentScreen, SCREEN_TYPE_CANVAS);
+    return NULL;
   }
+
+  app->currentScreen = NULL;
+  _screen_change(&app->currentScreen, SCREEN_TYPE_CANVAS);
 
   return app;
 }
 
 void app_run(App *const app) {
   while (!WindowShouldClose()) {
+    appState_update(globalAppState);
     ScreenType type = _screen_update(app->currentScreen);
     if (type != SCREEN_TYPE_UNDEFINED) {
       _screen_destroy(&app->currentScreen);
@@ -60,6 +65,7 @@ void app_destroy(App **ptrApp) {
   if (ptrApp && *ptrApp) {
     _screen_destroy(&(*ptrApp)->currentScreen);
     package_destroy(&globalPackage);
+    appState_destroy(&globalAppState);
     _finalize_raylib();
     MemFree(*ptrApp);
     *ptrApp = NULL;
