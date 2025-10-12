@@ -14,16 +14,22 @@ AppState *globalAppState = NULL;
 Package *globalPackage = NULL;
 
 // **************************************************
+// Static variables declaration.
+// **************************************************
+static bool __showFps = false;
+
+// **************************************************
 // Static functions declaration.
 // **************************************************
 static void _initialize_raylib(void);
 static void _finalize_raylib(void);
-
 static ScreenType _screen_update(Screen *const screen);
 static void _screen_draw(const Screen *const screen);
 static void _screen_destroy(Screen **ptrScreen);
 static void _screen_change(Screen **ptrScreen, ScreenType type);
 
+static void _keyboard_event(void);
+static void _draw_fps(void);
 // **************************************************
 // Public functions implementation.
 // **************************************************
@@ -49,6 +55,7 @@ App *app_create(void) {
 void app_run(App *const app) {
   while (!WindowShouldClose()) {
     appState_update(globalAppState);
+    _keyboard_event();
     ScreenType type = _screen_update(app->currentScreen);
     if (type != SCREEN_TYPE_UNDEFINED) {
       _screen_destroy(&app->currentScreen);
@@ -57,6 +64,7 @@ void app_run(App *const app) {
 
     BeginDrawing();
     _screen_draw(app->currentScreen);
+    if (__showFps) _draw_fps();
     EndDrawing();
   }
 }
@@ -86,6 +94,8 @@ static void _initialize_raylib(void) {
 
   InitWindow(TILE_EDITOR_SCREEN_WIDTH, TILE_EDITOR_SCREEN_HEIGHT,
              TILE_EDITOR_TITLE);
+
+  SetTargetFPS(TILE_EDITOR_SCREEN_FPS);
 }
 
 static void _finalize_raylib(void) { CloseWindow(); }
@@ -94,12 +104,12 @@ static ScreenType _screen_update(Screen *const screen) {
   ScreenType nextScreenType = SCREEN_TYPE_UNDEFINED;
   if (screen) {
     switch (screen->type) {
-    case SCREEN_TYPE_CANVAS:
-      canvas_update(screen);
-      nextScreenType = canvas_next_screen();
-      break;
-    default:
-      break;
+      case SCREEN_TYPE_CANVAS:
+        canvas_update(screen);
+        nextScreenType = canvas_next_screen();
+        break;
+      default:
+        break;
     }
   }
   return nextScreenType;
@@ -108,11 +118,11 @@ static ScreenType _screen_update(Screen *const screen) {
 static void _screen_draw(const Screen *const screen) {
   if (screen) {
     switch (screen->type) {
-    case SCREEN_TYPE_CANVAS:
-      canvas_draw(screen);
-      break;
-    default:
-      break;
+      case SCREEN_TYPE_CANVAS:
+        canvas_draw(screen);
+        break;
+      default:
+        break;
     }
   }
 }
@@ -120,11 +130,11 @@ static void _screen_draw(const Screen *const screen) {
 static void _screen_destroy(Screen **ptrScreen) {
   if (ptrScreen && *ptrScreen) {
     switch ((*ptrScreen)->type) {
-    case SCREEN_TYPE_CANVAS:
-      canvas_destroy(ptrScreen);
-      break;
-    default:
-      break;
+      case SCREEN_TYPE_CANVAS:
+        canvas_destroy(ptrScreen);
+        break;
+      default:
+        break;
     }
   }
 }
@@ -132,11 +142,19 @@ static void _screen_destroy(Screen **ptrScreen) {
 static void _screen_change(Screen **ptrScreen, ScreenType type) {
   if (ptrScreen) {
     switch (type) {
-    case SCREEN_TYPE_CANVAS:
-      *ptrScreen = canvas_create();
-      break;
-    default:
-      break;
+      case SCREEN_TYPE_CANVAS:
+        *ptrScreen = canvas_create();
+        break;
+      default:
+        break;
     }
   }
 }
+
+static void _keyboard_event(void) {
+  if (IsKeyPressed(KEY_F1)) {
+    __showFps = !__showFps;
+  }
+}
+
+static void _draw_fps(void) { DrawFPS(0, 0); }

@@ -8,6 +8,11 @@
 extern AppState *globalAppState;
 
 // **************************************************
+// Static variables declaration.
+// **************************************************
+static Vector2 __squareSelectedIndex = (Vector2){-1, -1};
+
+// **************************************************
 // Static functions declaration.
 // **************************************************
 static bool _create_squares(Grid *const grid);
@@ -48,9 +53,12 @@ void grid_draw(const Grid *const grid) {
                        0,
                        0,
                        grid->canvas.texture.width,
-                       -grid->canvas.texture.width,
+                       -grid->canvas.texture.height,
                    },
                    (Vector2){0}, TILE_EDITOR_COLOR_GRAY_LIGHT);
+
+    DrawLine(-100, 0, 100, 0, RED);
+    DrawLine(0, -100, 0, 100, GREEN);
   }
 }
 
@@ -83,10 +91,10 @@ static bool _create_squares(Grid *const grid) {
           .y = posY,
           .value = 0,
       };
-      posX += grid->side;
+      posX += grid->side + 2;
     }
     posX = 0;
-    posY += grid->side;
+    posY += grid->side + 2;
   }
 
   return false;
@@ -111,8 +119,14 @@ static void _load_canvas(Grid *const grid) {
       for (size_t j = 0; j < grid->width; ++j) {
         int32_t posX = (int32_t)grid->buffer[i * grid->width + j].x;
         int32_t posY = (int32_t)grid->buffer[i * grid->width + j].y;
-        DrawRectangleLines(posX, posY, grid->side, grid->side,
-                           TILE_EDITOR_COLOR_PINK_LIGHT);
+        DrawRectangleLinesEx(
+            (Rectangle){
+                posX,
+                posY,
+                grid->side,
+                grid->side,
+            },
+            1.0f, RED);
       }
     }
     EndTextureMode();
