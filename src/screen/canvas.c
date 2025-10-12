@@ -29,7 +29,7 @@ Screen *canvas_create(void) {
   }
 
   // TODO: I need to change this.
-  __grid = grid_create(24, 24, 16);
+  __grid = grid_create(8, 8, 16, __customCamera);
   if (!__grid) {
     canvas_destroy(&screen);
     return NULL;

@@ -35,7 +35,7 @@ CustomCamera *customCamera_create(void) {
   };
   customCamera->camera.target = (Vector2){0};
   customCamera->camera.rotation = 0;
-  customCamera->camera.zoom = 1;
+  customCamera->camera.zoom = TILE_EDITOR_CAMERA_ZOOM_MIN;
 
   return customCamera;
 }

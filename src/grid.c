@@ -10,7 +10,8 @@ extern AppState *globalAppState;
 // **************************************************
 // Static variables declaration.
 // **************************************************
-static Vector2 __squareSelectedIndex = (Vector2){-1, -1};
+static const CustomCamera *__customCamera = NULL;
+static bool __showGrid = false;
 
 // **************************************************
 // Static functions declaration.
@@ -19,11 +20,15 @@ static bool _create_squares(Grid *const grid);
 static void _destroy_squares(Square **ptrSquare);
 static void _load_canvas(Grid *const grid);
 static void _unload_canvas(Grid *const grid);
+static void _check_hover_square(Grid *const grid);
+
+static void _keyboard_event(void);
 
 // **************************************************
 // Public functions implementation.
 // **************************************************
-Grid *grid_create(uint8_t width, uint8_t height, uint8_t side) {
+Grid *grid_create(uint8_t width, uint8_t height, uint8_t side,
+                  const CustomCamera *customCamera) {
   Grid *grid = MemAlloc(sizeof(Grid));
   if (!grid) {
     return NULL;
@@ -32,6 +37,7 @@ Grid *grid_create(uint8_t width, uint8_t height, uint8_t side) {
   grid->width = width;
   grid->height = height;
   grid->side = side;
+  __customCamera = customCamera;
   if (_create_squares(grid)) {
     grid_destroy(&grid);
     return NULL;
@@ -42,23 +48,37 @@ Grid *grid_create(uint8_t width, uint8_t height, uint8_t side) {
 
 void grid_update(Grid *const grid) {
   if (grid) {
-    // TODO
+    _check_hover_square(grid);
+    _keyboard_event();
   }
 }
 
 void grid_draw(const Grid *const grid) {
   if (grid) {
-    DrawTextureRec(grid->canvas.texture,
-                   (Rectangle){
-                       0,
-                       0,
-                       grid->canvas.texture.width,
-                       -grid->canvas.texture.height,
-                   },
-                   (Vector2){0}, TILE_EDITOR_COLOR_GRAY_LIGHT);
+    if (grid->hoverPos.x > -1 && grid->hoverPos.y > -1) {
+      DrawRectangle(grid->hoverPos.x, grid->hoverPos.y, grid->side, grid->side,
+                    TILE_EDITOR_COLOR_PURPLE_LIGHT);
+    }
 
-    DrawLine(-100, 0, 100, 0, RED);
-    DrawLine(0, -100, 0, 100, GREEN);
+    if (__showGrid) {
+      DrawTextureRec(grid->canvas.texture,
+                     (Rectangle){
+                         0,
+                         0,
+                         grid->canvas.texture.width,
+                         -grid->canvas.texture.height,
+                     },
+                     (Vector2){0}, TILE_EDITOR_COLOR_GRAY_LIGHT);
+    }
+
+    DrawRectangleLinesEx(
+        (Rectangle){
+            0,
+            0,
+            grid->width * grid->side,
+            grid->height * grid->side,
+        },
+        2, TILE_EDITOR_COLOR_PURPLE_DARK);
   }
 }
 
@@ -91,10 +111,10 @@ static bool _create_squares(Grid *const grid) {
           .y = posY,
           .value = 0,
       };
-      posX += grid->side + 2;
+      posX += grid->side;
     }
     posX = 0;
-    posY += grid->side + 2;
+    posY += grid->side;
   }
 
   return false;
@@ -112,9 +132,9 @@ static void _load_canvas(Grid *const grid) {
     int32_t screenWidth = globalAppState->screenWidth;
     int32_t screenHeight = globalAppState->screenHeight;
     grid->canvas = LoadRenderTexture(screenWidth, screenHeight);
+    SetTextureFilter(grid->canvas.texture, TEXTURE_FILTER_POINT);
 
     BeginTextureMode(grid->canvas);
-    // ClearBackground(TILE_EDITOR_COLOR_GRAY_LIGHT);
     for (size_t i = 0; i < grid->height; ++i) {
       for (size_t j = 0; j < grid->width; ++j) {
         int32_t posX = (int32_t)grid->buffer[i * grid->width + j].x;
@@ -126,7 +146,7 @@ static void _load_canvas(Grid *const grid) {
                 grid->side,
                 grid->side,
             },
-            1.0f, RED);
+            1.f, ColorAlpha(TILE_EDITOR_COLOR_GRAY_LIGHT, 0.2f));
       }
     }
     EndTextureMode();
@@ -136,5 +156,25 @@ static void _load_canvas(Grid *const grid) {
 static void _unload_canvas(Grid *const grid) {
   if (grid && grid->canvas.id != 0) {
     UnloadRenderTexture(grid->canvas);
+  }
+}
+
+static void _check_hover_square(Grid *const grid) {
+  if (__customCamera) {
+    Vector2 world =
+        GetScreenToWorld2D(GetMousePosition(), __customCamera->camera);
+
+    int x = (int)(world.x / grid->side);
+    int y = (int)(world.y / grid->side);
+    grid->hoverPos = (Vector2){-1, -1};
+    if (x >= 0 && x < grid->width && y >= 0 && y < grid->height) {
+      grid->hoverPos.x = x * grid->side;
+      grid->hoverPos.y = y * grid->side;
+    }
+  }
+}
+static void _keyboard_event(void) {
+  if (IsKeyPressed(KEY_F2)) {
+    __showGrid = !__showGrid;
   }
 }

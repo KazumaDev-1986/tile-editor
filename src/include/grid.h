@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "config.h"
+#include "custom_camera.h"
 #include "raylib.h"
 
 TILE_EDITOR typedef struct {
@@ -18,6 +19,8 @@ TILE_EDITOR typedef struct {
   uint8_t side;
   Square *buffer;
 
+  Vector2 hoverPos;
+
   RenderTexture2D canvas;
 } Grid;
 
@@ -25,7 +28,8 @@ TILE_EDITOR typedef struct {
 extern "C" {
 #endif
 
-TILE_EDITOR Grid *grid_create(uint8_t width, uint8_t height, uint8_t side);
+TILE_EDITOR Grid *grid_create(uint8_t width, uint8_t height, uint8_t side,
+                              const CustomCamera *const customCamera);
 
 TILE_EDITOR void grid_update(Grid *const grid);
 
