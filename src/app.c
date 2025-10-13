@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <stdint.h>
 
 #include "include/app.h"
 #include "include/app_state.h"
@@ -30,6 +31,7 @@ static void _screen_destroy(Screen **ptrScreen);
 static void _screen_change(Screen **ptrScreen, ScreenType type);
 static void _keyboard_event(void);
 static void _draw_fps(void);
+static void _check_resize_screen(void);
 
 // **************************************************
 // Public functions implementation.
@@ -57,6 +59,7 @@ App *app_create(void) {
 void app_run(App *const app) {
   while (!WindowShouldClose()) {
     appState_update(globalAppState);
+    _check_resize_screen();
     _keyboard_event();
     ScreenType type = _screen_update(app->currentScreen);
     if (type != SCREEN_TYPE_UNDEFINED) {
@@ -101,7 +104,8 @@ static void _initialize_raylib(void) {
 }
 
 static void _initialize_raygui(void) {
-  // GuiSetFont(globalPackage->fonts[1]);
+  GuiSetFont(globalPackage->fonts[0]);  // Font[0]: 04b_03
+  GuiSetStyle(DEFAULT, TEXT_SIZE, TILE_EDITOR_RAYGUI_FONT_SIZE);
 }
 
 static void _finalize_raylib(void) { CloseWindow(); }
@@ -177,3 +181,13 @@ static void _keyboard_event(void) {
 }
 
 static void _draw_fps(void) { DrawFPS(0, 0); }
+
+static void _check_resize_screen(void) {
+  if (globalAppState->shouldUpdateScreen) {
+    float scale =
+        fminf((float)globalAppState->screenWidth / TILE_EDITOR_SCREEN_WIDTH,
+              (float)globalAppState->screenHeight / TILE_EDITOR_SCREEN_HEIGHT);
+    TraceLog(LOG_DEBUG, "scale: %f", scale);
+    GuiSetStyle(DEFAULT, TEXT_SIZE, TILE_EDITOR_RAYGUI_FONT_SIZE * scale);
+  }
+}

@@ -8,7 +8,6 @@
 #include "include/raymath.h"
 
 // screen = (world - target) * zoom + offset
-
 extern AppState *globalAppState;
 
 // **************************************************
