@@ -1,6 +1,9 @@
 #ifndef TILE_EDITOR_CONFIG_H
 #define TILE_EDITOR_CONFIG_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 #include "raylib.h"
 
 #define TILE_EDITOR

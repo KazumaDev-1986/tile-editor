@@ -22,14 +22,15 @@ static bool __showFps = false;
 // Static functions declaration.
 // **************************************************
 static void _initialize_raylib(void);
+static void _initialize_raygui(void);
 static void _finalize_raylib(void);
 static ScreenType _screen_update(Screen *const screen);
 static void _screen_draw(const Screen *const screen);
 static void _screen_destroy(Screen **ptrScreen);
 static void _screen_change(Screen **ptrScreen, ScreenType type);
-
 static void _keyboard_event(void);
 static void _draw_fps(void);
+
 // **************************************************
 // Public functions implementation.
 // **************************************************
@@ -41,13 +42,14 @@ App *app_create(void) {
   _initialize_raylib();
   globalPackage = package_create();
   globalAppState = appState_create();
+  _initialize_raygui();
   if (!globalPackage || !globalAppState) {
     app_destroy(&app);
     return NULL;
   }
 
   app->currentScreen = NULL;
-  _screen_change(&app->currentScreen, SCREEN_TYPE_CANVAS);
+  _screen_change(&app->currentScreen, SCREEN_TYPE_SETUP);
 
   return app;
 }
@@ -98,12 +100,20 @@ static void _initialize_raylib(void) {
   SetTargetFPS(TILE_EDITOR_SCREEN_FPS);
 }
 
+static void _initialize_raygui(void) {
+  // GuiSetFont(globalPackage->fonts[1]);
+}
+
 static void _finalize_raylib(void) { CloseWindow(); }
 
 static ScreenType _screen_update(Screen *const screen) {
   ScreenType nextScreenType = SCREEN_TYPE_UNDEFINED;
   if (screen) {
     switch (screen->type) {
+      case SCREEN_TYPE_SETUP:
+        setup_update(screen);
+        nextScreenType = setup_next_screen();
+        break;
       case SCREEN_TYPE_CANVAS:
         canvas_update(screen);
         nextScreenType = canvas_next_screen();
@@ -118,6 +128,9 @@ static ScreenType _screen_update(Screen *const screen) {
 static void _screen_draw(const Screen *const screen) {
   if (screen) {
     switch (screen->type) {
+      case SCREEN_TYPE_SETUP:
+        setup_draw(screen);
+        break;
       case SCREEN_TYPE_CANVAS:
         canvas_draw(screen);
         break;
@@ -130,6 +143,9 @@ static void _screen_draw(const Screen *const screen) {
 static void _screen_destroy(Screen **ptrScreen) {
   if (ptrScreen && *ptrScreen) {
     switch ((*ptrScreen)->type) {
+      case SCREEN_TYPE_SETUP:
+        setup_destroy(ptrScreen);
+        break;
       case SCREEN_TYPE_CANVAS:
         canvas_destroy(ptrScreen);
         break;
@@ -142,6 +158,9 @@ static void _screen_destroy(Screen **ptrScreen) {
 static void _screen_change(Screen **ptrScreen, ScreenType type) {
   if (ptrScreen) {
     switch (type) {
+      case SCREEN_TYPE_SETUP:
+        *ptrScreen = setup_create();
+        break;
       case SCREEN_TYPE_CANVAS:
         *ptrScreen = canvas_create();
         break;
