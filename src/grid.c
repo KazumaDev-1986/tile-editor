@@ -54,18 +54,6 @@ void grid_update(Grid *const grid) {
 
 void grid_draw(const Grid *const grid) {
   if (grid) {
-    if (grid->hoverPos.x > -1 && grid->hoverPos.y > -1) {
-      DrawRectangleLinesEx(
-          (Rectangle){
-
-              grid->hoverPos.x,
-              grid->hoverPos.y,
-              grid->side,
-              grid->side,
-          },
-          2, TILE_EDITOR_COLOR_PURPLE_LIGHT);
-    }
-
     if (__showGrid) {
       DrawTextureRec(grid->canvas.texture,
                      (Rectangle){
@@ -76,6 +64,11 @@ void grid_draw(const Grid *const grid) {
                      },
                      (Vector2){0}, TILE_EDITOR_COLOR_GRAY_LIGHT);
     }
+  }
+
+  if (grid->hoverPos.x > -1 && grid->hoverPos.y > -1) {
+    DrawRectangleLines(grid->hoverPos.x, grid->hoverPos.y, grid->side,
+                       grid->side, TILE_EDITOR_COLOR_GRAY_LIGHT);
   }
 }
 
@@ -99,7 +92,7 @@ static bool _create_squares(Grid *const grid) {
     return true;
   }
 
-  uint16_t posX = 0;
+  uint16_t posX = 1;
   uint16_t posY = 0;
   for (size_t i = 0; i < grid->height; ++i) {
     for (size_t j = 0; j < grid->width; ++j) {
@@ -110,7 +103,7 @@ static bool _create_squares(Grid *const grid) {
       };
       posX += grid->side;
     }
-    posX = 0;
+    posX = 1;
     posY += grid->side;
   }
 
@@ -136,14 +129,11 @@ static void _load_canvas(Grid *const grid) {
       for (size_t j = 0; j < grid->width; ++j) {
         int32_t posX = (int32_t)grid->buffer[i * grid->width + j].x;
         int32_t posY = (int32_t)grid->buffer[i * grid->width + j].y;
-        DrawRectangleLinesEx(
-            (Rectangle){
-                posX,
-                posY,
-                grid->side,
-                grid->side,
-            },
-            1.0f, ColorAlpha(TILE_EDITOR_COLOR_GRAY_LIGHT, 0.2f));
+        DrawRectangleLines(posX, posY, grid->side, grid->side,
+                           TILE_EDITOR_COLOR_GRAY_LIGHT);
+        // DrawRectangleLinesEx((Rectangle){posX, posY, grid->side, grid->side},
+        // 1,
+        //                      TILE_EDITOR_COLOR_GRAY_LIGHT);
       }
     }
     EndTextureMode();

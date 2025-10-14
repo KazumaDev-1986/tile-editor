@@ -1,6 +1,7 @@
 
 #include "include/app_state.h"
 #include "include/bar.h"
+#include "include/config.h"
 
 extern AppState *globalAppState;
 
@@ -57,7 +58,7 @@ static void _initialize_variables(Bar *const toolBar) {
   toolBar->position.x = 0;
   toolBar->position.y =
       globalAppState->screenHeight - (float)globalAppState->screenHeight / 3;
-  toolBar->background = TILE_EDITOR_COLOR_PURPLE_DARK;
+  toolBar->background = TILE_EDITOR_COLOR_PINK_LIGHT;
 }
 
 static void _check_resize_screen(Bar *const toolBar) {

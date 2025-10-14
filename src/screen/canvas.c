@@ -60,7 +60,7 @@ void canvas_update(Screen *const screen) {
 }
 
 void canvas_draw(const Screen *const screen) {
-  ClearBackground(TILE_EDITOR_COLOR_GRAY_LIGHT);
+  ClearBackground(TILE_EDITOR_COLOR_PURPLE_DARK);
   BeginMode2D(__customCamera->camera);
   grid_draw(__grid);
   EndMode2D();
@@ -68,7 +68,7 @@ void canvas_draw(const Screen *const screen) {
   float posY =
       globalAppState->screenHeight - (float)globalAppState->screenHeight / 3;
   DrawRectangle(0, posY, globalAppState->screenWidth,
-                globalAppState->screenHeight, TILE_EDITOR_COLOR_PURPLE_LIGHT);
+                globalAppState->screenHeight, TILE_EDITOR_COLOR_PURPLE_DARK);
   toolBar_draw(__toolBar);
 }
 
