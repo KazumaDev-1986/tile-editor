@@ -1,6 +1,8 @@
+#include <math.h>
 #include <stddef.h>
 
 #include "include/app_state.h"
+#include "include/config.h"
 #include "include/raylib.h"
 
 // **************************************************
@@ -15,6 +17,7 @@ AppState *appState_create(void) {
   state->screenWidth = GetScreenWidth();
   state->screenHeight = GetScreenHeight();
   state->shouldUpdateScreen = false;
+  state->zoom = 1.f;
 
   return state;
 }
@@ -26,6 +29,11 @@ void appState_update(AppState *const state) {
   if (state->screenWidth != newWidth || state->screenHeight != newHeight) {
     state->screenWidth = newWidth;
     state->screenHeight = newHeight;
+
+    float scaleX = (float)newWidth / TILE_EDITOR_SCREEN_WIDTH;
+    float scaleY = (float)newHeight / TILE_EDITOR_SCREEN_HEIGHT;
+
+    state->zoom = fminf(scaleX, scaleY);
     state->shouldUpdateScreen = true;
   }
 }

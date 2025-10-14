@@ -7,6 +7,8 @@
 #include "include/package.h"
 #include "include/raylib.h"
 #include "include/screen.h"
+#include "include/status_bar.h"
+#include "include/tool_bar.h"
 
 AppState *globalAppState = NULL;
 Package *globalPackage = NULL;
@@ -15,10 +17,13 @@ Package *globalPackage = NULL;
 // Static variables declaration.
 // **************************************************
 static bool __showFps = false;
+static StatusBar *__statusBar = NULL;
+static ToolBar *__toolBar = NULL;
 
 // **************************************************
 // Static functions declaration.
 // **************************************************
+static void _reset_static_variables(void);
 static void _initialize_raylib(void);
 static void _finalize_raylib(void);
 static ScreenType _screen_update(Screen *const screen);
@@ -32,6 +37,7 @@ static void _draw_fps(void);
 // Public functions implementation.
 // **************************************************
 App *app_create(void) {
+  _reset_static_variables();
   App *app = MemAlloc(sizeof(App));
   if (!app) {
     return NULL;
@@ -40,6 +46,18 @@ App *app_create(void) {
   globalPackage = package_create();
   globalAppState = appState_create();
   if (!globalPackage || !globalAppState) {
+    app_destroy(&app);
+    return NULL;
+  }
+
+  __statusBar = statusBar_create();
+  if (!__statusBar) {
+    app_destroy(&app);
+    return NULL;
+  }
+
+  __toolBar = toolBar_create();
+  if (!__toolBar) {
     app_destroy(&app);
     return NULL;
   }
@@ -59,9 +77,12 @@ void app_run(App *const app) {
       _screen_destroy(&app->currentScreen);
       _screen_change(&app->currentScreen, type);
     }
-
+    statusBar_update(__statusBar);
+    toolBar_update(__toolBar);
     BeginDrawing();
     _screen_draw(app->currentScreen);
+    statusBar_draw(__statusBar);
+    toolBar_draw(__toolBar);
     if (__showFps) _draw_fps();
     EndDrawing();
   }
@@ -70,6 +91,8 @@ void app_run(App *const app) {
 void app_destroy(App **ptrApp) {
   if (ptrApp && *ptrApp) {
     _screen_destroy(&(*ptrApp)->currentScreen);
+    statusBar_destroy(&__statusBar);
+    toolBar_destroy(&__toolBar);
     package_destroy(&globalPackage);
     appState_destroy(&globalAppState);
     _finalize_raylib();
@@ -170,3 +193,8 @@ static void _keyboard_event(void) {
 
 static void _draw_fps(void) { DrawFPS(0, 0); }
 
+static void _reset_static_variables(void) {
+  __showFps = false;
+  __statusBar = NULL;
+  __toolBar = NULL;
+}

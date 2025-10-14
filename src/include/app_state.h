@@ -8,6 +8,7 @@
 TILE_EDITOR typedef struct {
   int32_t screenWidth;
   int32_t screenHeight;
+  float zoom;
   bool shouldUpdateScreen;
 } AppState;
 
@@ -25,4 +26,4 @@ TILE_EDITOR void appState_destroy(AppState **ptrState);
 }
 #endif
 
-#endif // TILE_EDITOR_APP_STATE_H
+#endif  // TILE_EDITOR_APP_STATE_H

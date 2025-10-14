@@ -22,14 +22,6 @@ Screen *setup_create(void) {
     return NULL;
   }
 
-  // TODO: Find a way to improve this.
-  int32_t width = 368;
-  int32_t height = 256;
-  int32_t middleWidth = GetScreenWidth() / 2;
-  int32_t middleHeight = GetScreenHeight() / 2;
-  int32_t posX = middleWidth - width / 2;
-  int32_t posY = middleHeight - height / 2;
-
   screen->type = SCREEN_TYPE_SETUP;
   return screen;
 }

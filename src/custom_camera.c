@@ -59,13 +59,8 @@ void customCamera_destroy(CustomCamera **ptrCustomCamera) {
 // **************************************************
 static void _update_resize_camera(CustomCamera *const customCamera) {
   if (globalAppState->shouldUpdateScreen) {
-    float screenWidth = (float)globalAppState->screenWidth;
-    float screenHeight = (float)globalAppState->screenHeight;
-
-    float scale = fminf(screenWidth / TILE_EDITOR_SCREEN_WIDTH,
-                        screenHeight / TILE_EDITOR_SCREEN_HEIGHT);
-
-    customCamera->camera.zoom = scale;
+    
+    customCamera->camera.zoom = globalAppState->zoom;
     customCamera->camera.offset = (Vector2){
         .x = (float)globalAppState->screenWidth / 2,
         .y = (float)globalAppState->screenHeight / 2,
