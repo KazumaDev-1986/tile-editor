@@ -8,9 +8,6 @@
 #include "include/raylib.h"
 #include "include/screen.h"
 
-#define RAYGUI_IMPLEMENTATION
-#include "include/raygui.h"
-
 AppState *globalAppState = NULL;
 Package *globalPackage = NULL;
 
@@ -23,7 +20,6 @@ static bool __showFps = false;
 // Static functions declaration.
 // **************************************************
 static void _initialize_raylib(void);
-static void _initialize_raygui(void);
 static void _finalize_raylib(void);
 static ScreenType _screen_update(Screen *const screen);
 static void _screen_draw(const Screen *const screen);
@@ -31,7 +27,6 @@ static void _screen_destroy(Screen **ptrScreen);
 static void _screen_change(Screen **ptrScreen, ScreenType type);
 static void _keyboard_event(void);
 static void _draw_fps(void);
-static void _check_resize_screen(void);
 
 // **************************************************
 // Public functions implementation.
@@ -44,14 +39,13 @@ App *app_create(void) {
   _initialize_raylib();
   globalPackage = package_create();
   globalAppState = appState_create();
-  _initialize_raygui();
   if (!globalPackage || !globalAppState) {
     app_destroy(&app);
     return NULL;
   }
 
   app->currentScreen = NULL;
-  _screen_change(&app->currentScreen, SCREEN_TYPE_SETUP);
+  _screen_change(&app->currentScreen, SCREEN_TYPE_CANVAS);
 
   return app;
 }
@@ -59,7 +53,6 @@ App *app_create(void) {
 void app_run(App *const app) {
   while (!WindowShouldClose()) {
     appState_update(globalAppState);
-    _check_resize_screen();
     _keyboard_event();
     ScreenType type = _screen_update(app->currentScreen);
     if (type != SCREEN_TYPE_UNDEFINED) {
@@ -101,11 +94,6 @@ static void _initialize_raylib(void) {
              TILE_EDITOR_TITLE);
 
   SetTargetFPS(TILE_EDITOR_SCREEN_FPS);
-}
-
-static void _initialize_raygui(void) {
-  GuiSetFont(globalPackage->fonts[0]);  // Font[0]: 04b_03
-  GuiSetStyle(DEFAULT, TEXT_SIZE, TILE_EDITOR_RAYGUI_FONT_SIZE);
 }
 
 static void _finalize_raylib(void) { CloseWindow(); }
@@ -182,12 +170,3 @@ static void _keyboard_event(void) {
 
 static void _draw_fps(void) { DrawFPS(0, 0); }
 
-static void _check_resize_screen(void) {
-  if (globalAppState->shouldUpdateScreen) {
-    float scale =
-        fminf((float)globalAppState->screenWidth / TILE_EDITOR_SCREEN_WIDTH,
-              (float)globalAppState->screenHeight / TILE_EDITOR_SCREEN_HEIGHT);
-    TraceLog(LOG_DEBUG, "scale: %f", scale);
-    GuiSetStyle(DEFAULT, TEXT_SIZE, TILE_EDITOR_RAYGUI_FONT_SIZE * scale);
-  }
-}
