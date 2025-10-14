@@ -3,12 +3,11 @@
 
 #include "include/app.h"
 #include "include/app_state.h"
+#include "include/bar.h"
 #include "include/config.h"
 #include "include/package.h"
 #include "include/raylib.h"
 #include "include/screen.h"
-#include "include/status_bar.h"
-#include "include/tool_bar.h"
 
 AppState *globalAppState = NULL;
 Package *globalPackage = NULL;
@@ -17,8 +16,8 @@ Package *globalPackage = NULL;
 // Static variables declaration.
 // **************************************************
 static bool __showFps = false;
-static StatusBar *__statusBar = NULL;
-static ToolBar *__toolBar = NULL;
+static Bar *__statusBar = NULL;
+static Bar *__menuBar = NULL;
 
 // **************************************************
 // Static functions declaration.
@@ -56,8 +55,8 @@ App *app_create(void) {
     return NULL;
   }
 
-  __toolBar = toolBar_create();
-  if (!__toolBar) {
+  __menuBar = menuBar_create();
+  if (!__menuBar) {
     app_destroy(&app);
     return NULL;
   }
@@ -78,12 +77,13 @@ void app_run(App *const app) {
       _screen_change(&app->currentScreen, type);
     }
     statusBar_update(__statusBar);
-    toolBar_update(__toolBar);
+    menuBar_update(__menuBar);
     BeginDrawing();
     _screen_draw(app->currentScreen);
     statusBar_draw(__statusBar);
-    toolBar_draw(__toolBar);
-    if (__showFps) _draw_fps();
+    menuBar_draw(__menuBar);
+    if (__showFps)
+      _draw_fps();
     EndDrawing();
   }
 }
@@ -92,7 +92,7 @@ void app_destroy(App **ptrApp) {
   if (ptrApp && *ptrApp) {
     _screen_destroy(&(*ptrApp)->currentScreen);
     statusBar_destroy(&__statusBar);
-    toolBar_destroy(&__toolBar);
+    menuBar_destroy(&__menuBar);
     package_destroy(&globalPackage);
     appState_destroy(&globalAppState);
     _finalize_raylib();
@@ -125,16 +125,16 @@ static ScreenType _screen_update(Screen *const screen) {
   ScreenType nextScreenType = SCREEN_TYPE_UNDEFINED;
   if (screen) {
     switch (screen->type) {
-      case SCREEN_TYPE_SETUP:
-        setup_update(screen);
-        nextScreenType = setup_next_screen();
-        break;
-      case SCREEN_TYPE_CANVAS:
-        canvas_update(screen);
-        nextScreenType = canvas_next_screen();
-        break;
-      default:
-        break;
+    case SCREEN_TYPE_SETUP:
+      setup_update(screen);
+      nextScreenType = setup_next_screen();
+      break;
+    case SCREEN_TYPE_CANVAS:
+      canvas_update(screen);
+      nextScreenType = canvas_next_screen();
+      break;
+    default:
+      break;
     }
   }
   return nextScreenType;
@@ -143,14 +143,14 @@ static ScreenType _screen_update(Screen *const screen) {
 static void _screen_draw(const Screen *const screen) {
   if (screen) {
     switch (screen->type) {
-      case SCREEN_TYPE_SETUP:
-        setup_draw(screen);
-        break;
-      case SCREEN_TYPE_CANVAS:
-        canvas_draw(screen);
-        break;
-      default:
-        break;
+    case SCREEN_TYPE_SETUP:
+      setup_draw(screen);
+      break;
+    case SCREEN_TYPE_CANVAS:
+      canvas_draw(screen);
+      break;
+    default:
+      break;
     }
   }
 }
@@ -158,14 +158,14 @@ static void _screen_draw(const Screen *const screen) {
 static void _screen_destroy(Screen **ptrScreen) {
   if (ptrScreen && *ptrScreen) {
     switch ((*ptrScreen)->type) {
-      case SCREEN_TYPE_SETUP:
-        setup_destroy(ptrScreen);
-        break;
-      case SCREEN_TYPE_CANVAS:
-        canvas_destroy(ptrScreen);
-        break;
-      default:
-        break;
+    case SCREEN_TYPE_SETUP:
+      setup_destroy(ptrScreen);
+      break;
+    case SCREEN_TYPE_CANVAS:
+      canvas_destroy(ptrScreen);
+      break;
+    default:
+      break;
     }
   }
 }
@@ -173,14 +173,14 @@ static void _screen_destroy(Screen **ptrScreen) {
 static void _screen_change(Screen **ptrScreen, ScreenType type) {
   if (ptrScreen) {
     switch (type) {
-      case SCREEN_TYPE_SETUP:
-        *ptrScreen = setup_create();
-        break;
-      case SCREEN_TYPE_CANVAS:
-        *ptrScreen = canvas_create();
-        break;
-      default:
-        break;
+    case SCREEN_TYPE_SETUP:
+      *ptrScreen = setup_create();
+      break;
+    case SCREEN_TYPE_CANVAS:
+      *ptrScreen = canvas_create();
+      break;
+    default:
+      break;
     }
   }
 }
@@ -196,5 +196,5 @@ static void _draw_fps(void) { DrawFPS(0, 0); }
 static void _reset_static_variables(void) {
   __showFps = false;
   __statusBar = NULL;
-  __toolBar = NULL;
+  __menuBar = NULL;
 }

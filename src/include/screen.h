@@ -17,14 +17,16 @@ TILE_EDITOR typedef struct {
 extern "C" {
 #endif
 
-// Setup Screen.
+// Setup Screen declaration.
+// -------------------------------------------------------------
 TILE_EDITOR Screen *setup_create(void);
 TILE_EDITOR void setup_update(Screen *const screen);
 TILE_EDITOR void setup_draw(const Screen *const screen);
 TILE_EDITOR ScreenType setup_next_screen(void);
 TILE_EDITOR void setup_destroy(Screen **ptrScreen);
 
-// Canvas Screen.
+// Canvas Screen declaration.
+// -------------------------------------------------------------
 TILE_EDITOR Screen *canvas_create(void);
 TILE_EDITOR void canvas_update(Screen *const screen);
 TILE_EDITOR void canvas_draw(const Screen *const screen);

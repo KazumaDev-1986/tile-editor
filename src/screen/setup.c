@@ -33,12 +33,8 @@ void setup_update(Screen *const screen) {
 void setup_draw(const Screen *const screen) {
   ClearBackground(TILE_EDITOR_COLOR_GRAY_LIGHT);
 
-  int32_t width = 250;
-  int32_t height = 200;
   int32_t middleWidth = GetScreenWidth() / 2;
   int32_t middleHeight = GetScreenHeight() / 2;
-  int32_t posX = middleWidth - width / 2;
-  int32_t posY = middleHeight - height / 2;
 
   DrawLine(-100 + middleWidth, middleHeight, 100 + middleWidth, middleHeight,
            RED);

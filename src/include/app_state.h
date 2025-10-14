@@ -26,4 +26,4 @@ TILE_EDITOR void appState_destroy(AppState **ptrState);
 }
 #endif
 
-#endif  // TILE_EDITOR_APP_STATE_H
+#endif // TILE_EDITOR_APP_STATE_H

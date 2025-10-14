@@ -1,4 +1,3 @@
-#include <math.h>
 #include <stddef.h>
 
 #include "include/app_state.h"
@@ -13,10 +12,16 @@ extern AppState *globalAppState;
 // **************************************************
 // Static functions declaration.
 // **************************************************
+static float __limitY = 0;
+
+// **************************************************
+// Static functions declaration.
+// **************************************************
 static void _update_resize_camera(CustomCamera *const customCamera);
 static void _keyboard_event(CustomCamera *const customCamera);
 static Vector2 _get_direction(void);
 static void _mouse_event(CustomCamera *const customCamera);
+static void _update_camera_by_resize(CustomCamera *const customCamera);
 
 // **************************************************
 // Public functions implementation.
@@ -28,13 +33,9 @@ CustomCamera *customCamera_create(void) {
   }
 
   customCamera->camera = (Camera2D){0};
-  customCamera->camera.offset = (Vector2){
-      .x = (float)globalAppState->screenWidth / 2,
-      .y = (float)globalAppState->screenHeight / 2,
-  };
-  customCamera->camera.target = (Vector2){0};
+  customCamera->camera.target = (Vector2){200, 138};
   customCamera->camera.rotation = 0;
-  customCamera->camera.zoom = TILE_EDITOR_CAMERA_ZOOM_MIN;
+  _update_camera_by_resize(customCamera);
 
   return customCamera;
 }
@@ -57,14 +58,25 @@ void customCamera_destroy(CustomCamera **ptrCustomCamera) {
 // **************************************************
 // Static functions implementation.
 // **************************************************
+static void _update_camera_by_resize(CustomCamera *const customCamera) {
+  float screenHeight = globalAppState->screenHeight;
+  __limitY = screenHeight - screenHeight / 3;
+
+  float zoom = globalAppState->zoom;
+  if (zoom < TILE_EDITOR_CAMERA_ZOOM_MIN) {
+    zoom = TILE_EDITOR_CAMERA_ZOOM_MIN;
+  }
+
+  customCamera->camera.zoom = zoom;
+  customCamera->camera.offset = (Vector2){
+      .x = (float)globalAppState->screenWidth / 2,
+      .y = (float)globalAppState->screenHeight / 2,
+  };
+}
+
 static void _update_resize_camera(CustomCamera *const customCamera) {
   if (globalAppState->shouldUpdateScreen) {
-    
-    customCamera->camera.zoom = globalAppState->zoom;
-    customCamera->camera.offset = (Vector2){
-        .x = (float)globalAppState->screenWidth / 2,
-        .y = (float)globalAppState->screenHeight / 2,
-    };
+    _update_camera_by_resize(customCamera);
   }
 }
 
@@ -81,10 +93,14 @@ static void _keyboard_event(CustomCamera *const customCamera) {
 static Vector2 _get_direction(void) {
   Vector2 dir = {0, 0};
 
-  if (IsKeyDown(KEY_UP)) dir.y -= 1;
-  if (IsKeyDown(KEY_DOWN)) dir.y += 1;
-  if (IsKeyDown(KEY_LEFT)) dir.x -= 1;
-  if (IsKeyDown(KEY_RIGHT)) dir.x += 1;
+  if (IsKeyDown(KEY_UP))
+    dir.y -= 1;
+  if (IsKeyDown(KEY_DOWN))
+    dir.y += 1;
+  if (IsKeyDown(KEY_LEFT))
+    dir.x -= 1;
+  if (IsKeyDown(KEY_RIGHT))
+    dir.x += 1;
 
   if (dir.x != 0 || dir.y != 0) {
     dir = Vector2Normalize(dir);
@@ -94,6 +110,11 @@ static Vector2 _get_direction(void) {
 }
 
 static void _mouse_event(CustomCamera *const customCamera) {
+  Vector2 mousePosition = GetMousePosition();
+  if (mousePosition.y > __limitY) {
+    return;
+  }
+
   if (IsMouseButtonDown(MOUSE_MIDDLE_BUTTON)) {
     Vector2 mouseDelta = GetMouseDelta();
     float zoom = customCamera->camera.zoom;

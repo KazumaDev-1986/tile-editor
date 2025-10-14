@@ -1,9 +1,13 @@
 #include <stddef.h>
 
+#include "../include/app_state.h"
+#include "../include/bar.h"
 #include "../include/custom_camera.h"
 #include "../include/grid.h"
 #include "../include/raylib.h"
 #include "../include/screen.h"
+
+extern AppState *globalAppState;
 
 // **************************************************
 // Static variables declaration.
@@ -11,6 +15,7 @@
 static ScreenType __nextScreenType = SCREEN_TYPE_UNDEFINED;
 static Grid *__grid = NULL;
 static CustomCamera *__customCamera = NULL;
+static Bar *__toolBar = NULL;
 
 // **************************************************
 // Static function declaration.
@@ -33,9 +38,14 @@ Screen *canvas_create(void) {
     return NULL;
   }
 
-  // TODO: I need to change this.
-  __grid = grid_create(8, 8, 16, __customCamera);
+  __grid = grid_create(32, 32, 16, __customCamera);
   if (!__grid) {
+    canvas_destroy(&screen);
+    return NULL;
+  }
+
+  __toolBar = toolBar_create();
+  if (!__toolBar) {
     canvas_destroy(&screen);
     return NULL;
   }
@@ -46,6 +56,7 @@ Screen *canvas_create(void) {
 void canvas_update(Screen *const screen) {
   customCamera_update(__customCamera);
   grid_update(__grid);
+  toolBar_update(__toolBar);
 }
 
 void canvas_draw(const Screen *const screen) {
@@ -53,6 +64,12 @@ void canvas_draw(const Screen *const screen) {
   BeginMode2D(__customCamera->camera);
   grid_draw(__grid);
   EndMode2D();
+
+  float posY =
+      globalAppState->screenHeight - (float)globalAppState->screenHeight / 3;
+  DrawRectangle(0, posY, globalAppState->screenWidth,
+                globalAppState->screenHeight, TILE_EDITOR_COLOR_PURPLE_LIGHT);
+  toolBar_draw(__toolBar);
 }
 
 ScreenType canvas_next_screen(void) { return __nextScreenType; }
@@ -60,6 +77,7 @@ ScreenType canvas_next_screen(void) { return __nextScreenType; }
 void canvas_destroy(Screen **ptrScreen) {
   if (ptrScreen && *ptrScreen) {
     grid_destroy(&__grid);
+    toolBar_destroy(&__toolBar);
     customCamera_destroy(&__customCamera);
     MemFree(*ptrScreen);
     *ptrScreen = NULL;
@@ -73,4 +91,5 @@ static void _reset_static_variables(void) {
   __nextScreenType = SCREEN_TYPE_UNDEFINED;
   __grid = NULL;
   __customCamera = NULL;
+  __toolBar = NULL;
 }

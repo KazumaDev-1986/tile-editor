@@ -11,7 +11,7 @@ extern AppState *globalAppState;
 // Static variables declaration.
 // **************************************************
 static const CustomCamera *__customCamera = NULL;
-static bool __showGrid = false;
+static bool __showGrid = true;
 
 // **************************************************
 // Static functions declaration.
@@ -21,7 +21,6 @@ static void _destroy_squares(Square **ptrSquare);
 static void _load_canvas(Grid *const grid);
 static void _unload_canvas(Grid *const grid);
 static void _check_hover_square(Grid *const grid);
-
 static void _keyboard_event(void);
 
 // **************************************************
@@ -56,8 +55,15 @@ void grid_update(Grid *const grid) {
 void grid_draw(const Grid *const grid) {
   if (grid) {
     if (grid->hoverPos.x > -1 && grid->hoverPos.y > -1) {
-      DrawRectangle(grid->hoverPos.x, grid->hoverPos.y, grid->side, grid->side,
-                    TILE_EDITOR_COLOR_PURPLE_LIGHT);
+      DrawRectangleLinesEx(
+          (Rectangle){
+
+              grid->hoverPos.x,
+              grid->hoverPos.y,
+              grid->side,
+              grid->side,
+          },
+          2, TILE_EDITOR_COLOR_PURPLE_LIGHT);
     }
 
     if (__showGrid) {
@@ -70,15 +76,6 @@ void grid_draw(const Grid *const grid) {
                      },
                      (Vector2){0}, TILE_EDITOR_COLOR_GRAY_LIGHT);
     }
-
-    DrawRectangleLinesEx(
-        (Rectangle){
-            0,
-            0,
-            grid->width * grid->side,
-            grid->height * grid->side,
-        },
-        2, TILE_EDITOR_COLOR_PURPLE_DARK);
   }
 }
 
@@ -146,7 +143,7 @@ static void _load_canvas(Grid *const grid) {
                 grid->side,
                 grid->side,
             },
-            1.f, ColorAlpha(TILE_EDITOR_COLOR_GRAY_LIGHT, 0.2f));
+            1.0f, ColorAlpha(TILE_EDITOR_COLOR_GRAY_LIGHT, 0.2f));
       }
     }
     EndTextureMode();

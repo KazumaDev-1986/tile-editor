@@ -1,5 +1,5 @@
 #include "include/app_state.h"
-#include "include/status_bar.h"
+#include "include/bar.h"
 
 extern AppState *globalAppState;
 
@@ -11,14 +11,14 @@ static const int32_t BAR_WIDTH = 24;
 // **************************************************
 // Static functions declaration.
 // **************************************************
-static void _check_resize_screen(StatusBar *const statusBar);
-static void _initialize_variables(StatusBar *const statusBar);
+static void _check_resize_screen(Bar *const statusBar);
+static void _initialize_variables(Bar *const statusBar);
 
 // **************************************************
 // Public functions implementation.
 // **************************************************
-StatusBar *statusBar_create(void) {
-  StatusBar *statusBar = MemAlloc(sizeof(StatusBar));
+Bar *statusBar_create(void) {
+  Bar *statusBar = MemAlloc(sizeof(Bar));
   if (!statusBar) {
     return NULL;
   }
@@ -27,11 +27,9 @@ StatusBar *statusBar_create(void) {
   return statusBar;
 }
 
-void statusBar_update(StatusBar *const statusBar) {
-  _check_resize_screen(statusBar);
-}
+void statusBar_update(Bar *const statusBar) { _check_resize_screen(statusBar); }
 
-void statusBar_draw(const StatusBar *const statusBar) {
+void statusBar_draw(const Bar *const statusBar) {
   DrawRectangleRec(
       (Rectangle){
           statusBar->position.x,
@@ -42,7 +40,7 @@ void statusBar_draw(const StatusBar *const statusBar) {
       statusBar->background);
 }
 
-void statusBar_destroy(StatusBar **ptrStatusBar) {
+void statusBar_destroy(Bar **ptrStatusBar) {
   if (ptrStatusBar && *ptrStatusBar) {
     MemFree(*ptrStatusBar);
     *ptrStatusBar = NULL;
@@ -52,7 +50,7 @@ void statusBar_destroy(StatusBar **ptrStatusBar) {
 // **************************************************
 // Static functions implementation.
 // **************************************************
-static void _initialize_variables(StatusBar *const statusBar) {
+static void _initialize_variables(Bar *const statusBar) {
   statusBar->size.x = globalAppState->screenWidth;
   statusBar->size.y = BAR_WIDTH * globalAppState->zoom;
   statusBar->position.x = 0;
@@ -60,7 +58,7 @@ static void _initialize_variables(StatusBar *const statusBar) {
   statusBar->background = TILE_EDITOR_COLOR_BLUE_DARK;
 }
 
-static void _check_resize_screen(StatusBar *const statusBar) {
+static void _check_resize_screen(Bar *const statusBar) {
   if (globalAppState->shouldUpdateScreen) {
     _initialize_variables(statusBar);
   }

@@ -1,25 +1,25 @@
 
 #include "include/app_state.h"
-#include "include/tool_bar.h"
+#include "include/bar.h"
 
 extern AppState *globalAppState;
 
 // **************************************************
 // Static variables declaration.
 // **************************************************
-static const int32_t BAR_WIDTH = 24;
+static const int32_t BAR_WIDTH = 32;
 
 // **************************************************
 // Static functions declaration.
 // **************************************************
-static void _check_resize_screen(ToolBar *const toolBar);
-static void _initialize_variables(ToolBar *const toolBar);
+static void _check_resize_screen(Bar *const toolBar);
+static void _initialize_variables(Bar *const toolBar);
 
 // **************************************************
 // Public functions implementation.
 // **************************************************
-ToolBar *toolBar_create(void) {
-  ToolBar *toolBar = MemAlloc(sizeof(ToolBar));
+Bar *toolBar_create(void) {
+  Bar *toolBar = MemAlloc(sizeof(Bar));
   if (!toolBar) {
     return NULL;
   }
@@ -28,11 +28,9 @@ ToolBar *toolBar_create(void) {
   return toolBar;
 }
 
-void toolBar_update(ToolBar *const toolBar) {
-  _check_resize_screen(toolBar);
-}
+void toolBar_update(Bar *const toolBar) { _check_resize_screen(toolBar); }
 
-void toolBar_draw(const ToolBar *const toolBar) {
+void toolBar_draw(const Bar *const toolBar) {
   DrawRectangleRec(
       (Rectangle){
           toolBar->position.x,
@@ -43,7 +41,7 @@ void toolBar_draw(const ToolBar *const toolBar) {
       toolBar->background);
 }
 
-void toolBar_destroy(ToolBar **ptrToolBar) {
+void toolBar_destroy(Bar **ptrToolBar) {
   if (ptrToolBar && *ptrToolBar) {
     MemFree(*ptrToolBar);
     *ptrToolBar = NULL;
@@ -53,15 +51,16 @@ void toolBar_destroy(ToolBar **ptrToolBar) {
 // **************************************************
 // Static functions implementation.
 // **************************************************
-static void _initialize_variables(ToolBar *const toolBar) {
+static void _initialize_variables(Bar *const toolBar) {
   toolBar->size.x = globalAppState->screenWidth;
   toolBar->size.y = BAR_WIDTH * globalAppState->zoom;
   toolBar->position.x = 0;
-  toolBar->position.y = 0;
-  toolBar->background = TILE_EDITOR_COLOR_BLUE_DARK;
+  toolBar->position.y =
+      globalAppState->screenHeight - (float)globalAppState->screenHeight / 3;
+  toolBar->background = TILE_EDITOR_COLOR_PURPLE_DARK;
 }
 
-static void _check_resize_screen(ToolBar *const toolBar) {
+static void _check_resize_screen(Bar *const toolBar) {
   if (globalAppState->shouldUpdateScreen) {
     _initialize_variables(toolBar);
   }
