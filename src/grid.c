@@ -3,12 +3,11 @@
 #include "include/app_state.h"
 #include "include/config.h"
 #include "include/grid.h"
-#include "include/raylib.h"
 #include "include/package.h"
+#include "include/raylib.h"
 
 extern Package *globalPackage;
 extern AppState *globalAppState;
-
 
 // **************************************************
 // Static variables declaration.
@@ -95,7 +94,7 @@ static bool _create_squares(Grid *const grid) {
     return true;
   }
 
-  uint16_t posX = 1;
+  uint16_t posX = 0;
   uint16_t posY = 0;
   for (size_t i = 0; i < grid->height; ++i) {
     for (size_t j = 0; j < grid->width; ++j) {
@@ -106,7 +105,7 @@ static bool _create_squares(Grid *const grid) {
       };
       posX += grid->side;
     }
-    posX = 1;
+    posX = 0;
     posY += grid->side;
   }
 
@@ -122,8 +121,8 @@ static void _destroy_squares(Square **ptrSquare) {
 
 static void _load_canvas(Grid *const grid) {
   if (grid) {
-    int32_t screenWidth = globalAppState->screenWidth;
-    int32_t screenHeight = globalAppState->screenHeight;
+    int32_t screenWidth = TILE_EDITOR_VIRTUAL_SCREEN_WIDTH;
+    int32_t screenHeight = TILE_EDITOR_VIRTUAL_SCREEN_HEIGHT;
     grid->canvas = LoadRenderTexture(screenWidth, screenHeight);
     SetTextureFilter(grid->canvas.texture, TEXTURE_FILTER_POINT);
 

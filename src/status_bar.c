@@ -1,5 +1,6 @@
 #include "include/app_state.h"
 #include "include/bar.h"
+#include "include/config.h"
 #include "include/package.h"
 
 extern Package *globalPackage;
@@ -8,7 +9,7 @@ extern AppState *globalAppState;
 // **************************************************
 // Static variables declaration.
 // **************************************************
-static const int32_t BAR_WIDTH = 24;
+static const int32_t BAR_WIDTH = 4;
 
 // **************************************************
 // Static functions declaration.
@@ -53,10 +54,10 @@ void statusBar_destroy(Bar **ptrStatusBar) {
 // Static functions implementation.
 // **************************************************
 static void _initialize_variables(Bar *const statusBar) {
-  statusBar->size.x = globalAppState->screenWidth;
-  statusBar->size.y = BAR_WIDTH * globalAppState->zoom;
+  statusBar->size.x = TILE_EDITOR_VIRTUAL_SCREEN_WIDTH;
+  statusBar->size.y = BAR_WIDTH;
   statusBar->position.x = 0;
-  statusBar->position.y = globalAppState->screenHeight - statusBar->size.y;
+  statusBar->position.y = TILE_EDITOR_VIRTUAL_SCREEN_HEIGHT - statusBar->size.y;
   statusBar->background = globalPackage->theme.colors[3];
 }
 

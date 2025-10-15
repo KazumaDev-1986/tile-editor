@@ -12,12 +12,10 @@ extern AppState *globalAppState;
 // **************************************************
 // Static functions declaration.
 // **************************************************
-static float __limitY = 0;
 
 // **************************************************
 // Static functions declaration.
 // **************************************************
-static void _update_resize_camera(CustomCamera *const customCamera);
 static void _keyboard_event(CustomCamera *const customCamera);
 static Vector2 _get_direction(void);
 static void _mouse_event(CustomCamera *const customCamera);
@@ -33,7 +31,7 @@ CustomCamera *customCamera_create(void) {
   }
 
   customCamera->camera = (Camera2D){0};
-  customCamera->camera.target = (Vector2){200, 138};
+  customCamera->camera.target = (Vector2){0, 0};
   customCamera->camera.rotation = 0;
   _update_camera_by_resize(customCamera);
 
@@ -42,7 +40,6 @@ CustomCamera *customCamera_create(void) {
 
 void customCamera_update(CustomCamera *const customCamera) {
   if (customCamera) {
-    _update_resize_camera(customCamera);
     _mouse_event(customCamera);
     _keyboard_event(customCamera);
   }
@@ -59,9 +56,6 @@ void customCamera_destroy(CustomCamera **ptrCustomCamera) {
 // Static functions implementation.
 // **************************************************
 static void _update_camera_by_resize(CustomCamera *const customCamera) {
-  float screenHeight = globalAppState->screenHeight;
-  __limitY = screenHeight - screenHeight / 3;
-
   float zoom = globalAppState->zoom;
   if (zoom < TILE_EDITOR_CAMERA_ZOOM_MIN) {
     zoom = TILE_EDITOR_CAMERA_ZOOM_MIN;
@@ -69,15 +63,9 @@ static void _update_camera_by_resize(CustomCamera *const customCamera) {
 
   customCamera->camera.zoom = zoom;
   customCamera->camera.offset = (Vector2){
-      .x = (float)globalAppState->screenWidth / 2,
-      .y = (float)globalAppState->screenHeight / 2,
+      .x = (float)TILE_EDITOR_VIRTUAL_SCREEN_WIDTH / 2,
+      .y = (float)TILE_EDITOR_VIRTUAL_SCREEN_HEIGHT / 2,
   };
-}
-
-static void _update_resize_camera(CustomCamera *const customCamera) {
-  if (globalAppState->shouldUpdateScreen) {
-    _update_camera_by_resize(customCamera);
-  }
 }
 
 static void _keyboard_event(CustomCamera *const customCamera) {
@@ -110,11 +98,6 @@ static Vector2 _get_direction(void) {
 }
 
 static void _mouse_event(CustomCamera *const customCamera) {
-  Vector2 mousePosition = GetMousePosition();
-  if (mousePosition.y > __limitY) {
-    return;
-  }
-
   if (IsMouseButtonDown(MOUSE_MIDDLE_BUTTON)) {
     Vector2 mouseDelta = GetMouseDelta();
     float zoom = customCamera->camera.zoom;

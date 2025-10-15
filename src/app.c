@@ -1,9 +1,7 @@
-#include <stddef.h>
 #include <stdint.h>
 
 #include "include/app.h"
 #include "include/app_state.h"
-#include "include/bar.h"
 #include "include/config.h"
 #include "include/package.h"
 #include "include/raylib.h"
@@ -16,8 +14,7 @@ Package *globalPackage = NULL;
 // Static variables declaration.
 // **************************************************
 static bool __showFps = false;
-static Bar *__statusBar = NULL;
-static Bar *__menuBar = NULL;
+static RenderTexture2D __target = (RenderTexture2D){0};
 
 // **************************************************
 // Static functions declaration.
@@ -49,26 +46,20 @@ App *app_create(void) {
     return NULL;
   }
 
-  __statusBar = statusBar_create();
-  if (!__statusBar) {
-    app_destroy(&app);
-    return NULL;
-  }
-
-  __menuBar = menuBar_create();
-  if (!__menuBar) {
-    app_destroy(&app);
-    return NULL;
-  }
-
   app->currentScreen = NULL;
   _screen_change(&app->currentScreen, SCREEN_TYPE_CANVAS);
+
+  __target = LoadRenderTexture(TILE_EDITOR_VIRTUAL_SCREEN_WIDTH,
+                               TILE_EDITOR_VIRTUAL_SCREEN_HEIGHT);
+  SetTextureFilter(__target.texture, TEXTURE_FILTER_POINT);
 
   return app;
 }
 
 void app_run(App *const app) {
   while (!WindowShouldClose()) {
+    // Updating.
+    // --------------------------------------------------
     appState_update(globalAppState);
     _keyboard_event();
     ScreenType type = _screen_update(app->currentScreen);
@@ -76,14 +67,35 @@ void app_run(App *const app) {
       _screen_destroy(&app->currentScreen);
       _screen_change(&app->currentScreen, type);
     }
-    statusBar_update(__statusBar);
-    menuBar_update(__menuBar);
-    BeginDrawing();
+    // Virtual Drawing.
+    // --------------------------------------------------
+    BeginTextureMode(__target);
+    ClearBackground(globalPackage->theme.colors[0]);
     _screen_draw(app->currentScreen);
-    statusBar_draw(__statusBar);
-    menuBar_draw(__menuBar);
     if (__showFps)
       _draw_fps();
+
+    EndTextureMode();
+
+    // Drawing.
+    // --------------------------------------------------
+    BeginDrawing();
+    ClearBackground(BLACK);
+    DrawTexturePro(__target.texture,
+                   (Rectangle){
+                       0,
+                       0,
+                       (float)__target.texture.width,
+                       -(float)__target.texture.height,
+                   },
+                   (Rectangle){
+                       globalAppState->view.x,
+                       globalAppState->view.y,
+                       globalAppState->view.width,
+                       globalAppState->view.height,
+                   },
+                   (Vector2){0, 0}, 0, RAYWHITE);
+
     EndDrawing();
   }
 }
@@ -91,8 +103,7 @@ void app_run(App *const app) {
 void app_destroy(App **ptrApp) {
   if (ptrApp && *ptrApp) {
     _screen_destroy(&(*ptrApp)->currentScreen);
-    statusBar_destroy(&__statusBar);
-    menuBar_destroy(&__menuBar);
+    UnloadRenderTexture(__target);
     package_destroy(&globalPackage);
     appState_destroy(&globalAppState);
     _finalize_raylib();
@@ -193,8 +204,4 @@ static void _keyboard_event(void) {
 
 static void _draw_fps(void) { DrawFPS(0, 0); }
 
-static void _reset_static_variables(void) {
-  __showFps = false;
-  __statusBar = NULL;
-  __menuBar = NULL;
-}
+static void _reset_static_variables(void) { __showFps = false; }

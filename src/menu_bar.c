@@ -10,7 +10,7 @@ extern AppState *globalAppState;
 // **************************************************
 // Static variables declaration.
 // **************************************************
-static const int32_t BAR_WIDTH = 24;
+static const int32_t BAR_WIDTH = 4;
 
 // **************************************************
 // Static functions declaration.
@@ -56,7 +56,7 @@ void menuBar_destroy(Bar **ptrMenuBar) {
 // **************************************************
 static void _initialize_variables(Bar *const menuBar) {
   menuBar->size.x = globalAppState->screenWidth;
-  menuBar->size.y = BAR_WIDTH * globalAppState->zoom;
+  menuBar->size.y = BAR_WIDTH;
   menuBar->position.x = 0;
   menuBar->position.y = 0;
   menuBar->background = globalPackage->theme.colors[3];
