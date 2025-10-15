@@ -4,9 +4,11 @@
 #include "../include/bar.h"
 #include "../include/custom_camera.h"
 #include "../include/grid.h"
+#include "../include/package.h"
 #include "../include/raylib.h"
 #include "../include/screen.h"
 
+extern Package *globalPackage;
 extern AppState *globalAppState;
 
 // **************************************************
@@ -60,7 +62,7 @@ void canvas_update(Screen *const screen) {
 }
 
 void canvas_draw(const Screen *const screen) {
-  ClearBackground(TILE_EDITOR_COLOR_PURPLE_DARK);
+  ClearBackground(globalPackage->theme.colors[0]);
   BeginMode2D(__customCamera->camera);
   grid_draw(__grid);
   EndMode2D();
@@ -68,7 +70,7 @@ void canvas_draw(const Screen *const screen) {
   float posY =
       globalAppState->screenHeight - (float)globalAppState->screenHeight / 3;
   DrawRectangle(0, posY, globalAppState->screenWidth,
-                globalAppState->screenHeight, TILE_EDITOR_COLOR_PURPLE_DARK);
+                globalAppState->screenHeight, globalPackage->theme.colors[0]);
   toolBar_draw(__toolBar);
 }
 

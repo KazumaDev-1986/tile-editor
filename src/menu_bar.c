@@ -2,8 +2,9 @@
 
 #include "include/app_state.h"
 #include "include/bar.h"
-#include "include/config.h"
+#include "include/package.h"
 
+extern Package *globalPackage;
 extern AppState *globalAppState;
 
 // **************************************************
@@ -58,7 +59,7 @@ static void _initialize_variables(Bar *const menuBar) {
   menuBar->size.y = BAR_WIDTH * globalAppState->zoom;
   menuBar->position.x = 0;
   menuBar->position.y = 0;
-  menuBar->background = TILE_EDITOR_COLOR_PURPLE_LIGHT;
+  menuBar->background = globalPackage->theme.colors[3];
 }
 
 static void _check_resize_screen(Bar *const menuBar) {

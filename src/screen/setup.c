@@ -1,6 +1,9 @@
 #include <stdint.h>
 
 #include "../include/screen.h"
+#include "../include/package.h"
+
+extern Package *globalPackage;
 
 // **************************************************
 // Static variables declaration.
@@ -31,7 +34,7 @@ void setup_update(Screen *const screen) {
 }
 
 void setup_draw(const Screen *const screen) {
-  ClearBackground(TILE_EDITOR_COLOR_GRAY_LIGHT);
+  ClearBackground(globalPackage->theme.colors[0]);
 
   int32_t middleWidth = GetScreenWidth() / 2;
   int32_t middleHeight = GetScreenHeight() / 2;

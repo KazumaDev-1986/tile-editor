@@ -4,8 +4,11 @@
 #include "include/config.h"
 #include "include/grid.h"
 #include "include/raylib.h"
+#include "include/package.h"
 
+extern Package *globalPackage;
 extern AppState *globalAppState;
+
 
 // **************************************************
 // Static variables declaration.
@@ -62,13 +65,13 @@ void grid_draw(const Grid *const grid) {
                          grid->canvas.texture.width,
                          -grid->canvas.texture.height,
                      },
-                     (Vector2){0}, TILE_EDITOR_COLOR_GRAY_LIGHT);
+                     (Vector2){0}, globalPackage->theme.colors[7]);
     }
   }
 
   if (grid->hoverPos.x > -1 && grid->hoverPos.y > -1) {
     DrawRectangleLines(grid->hoverPos.x, grid->hoverPos.y, grid->side,
-                       grid->side, TILE_EDITOR_COLOR_GRAY_LIGHT);
+                       grid->side, globalPackage->theme.colors[7]);
   }
 }
 
@@ -130,7 +133,7 @@ static void _load_canvas(Grid *const grid) {
         int32_t posX = (int32_t)grid->buffer[i * grid->width + j].x;
         int32_t posY = (int32_t)grid->buffer[i * grid->width + j].y;
         DrawRectangleLines(posX, posY, grid->side, grid->side,
-                           TILE_EDITOR_COLOR_GRAY_LIGHT);
+                           globalPackage->theme.colors[7]);
         // DrawRectangleLinesEx((Rectangle){posX, posY, grid->side, grid->side},
         // 1,
         //                      TILE_EDITOR_COLOR_GRAY_LIGHT);

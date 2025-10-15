@@ -1,7 +1,8 @@
 #include "include/app_state.h"
 #include "include/bar.h"
-#include "include/config.h"
+#include "include/package.h"
 
+extern Package *globalPackage;
 extern AppState *globalAppState;
 
 // **************************************************
@@ -56,7 +57,7 @@ static void _initialize_variables(Bar *const statusBar) {
   statusBar->size.y = BAR_WIDTH * globalAppState->zoom;
   statusBar->position.x = 0;
   statusBar->position.y = globalAppState->screenHeight - statusBar->size.y;
-  statusBar->background = TILE_EDITOR_COLOR_PURPLE_LIGHT;
+  statusBar->background = globalPackage->theme.colors[3];
 }
 
 static void _check_resize_screen(Bar *const statusBar) {

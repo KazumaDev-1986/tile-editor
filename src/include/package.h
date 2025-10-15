@@ -2,10 +2,14 @@
 #define TILE_EDITOR_PACKAGE_H
 
 #include "config.h"
-#include "raylib.h"
+
+TILE_EDITOR typedef struct {
+  Color colors[TILE_EDITOR_COLOR_PALETTE_SIZE];
+} Theme;
 
 TILE_EDITOR typedef struct {
   Font fonts[TILE_EDITOR_PACKAGE_FONT_SIZE];
+  Theme theme;
 } Package;
 
 #if defined(__cplusplsu)
