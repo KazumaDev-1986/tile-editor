@@ -51,17 +51,10 @@ void grid_draw(const Grid *const grid) {
     return;
   }
 
-  for (size_t i = 0; i < grid->height; ++i) {
-    for (size_t j = 0; j < grid->width; ++j) {
-      DrawRectangleLines(grid->buffer[i].x, grid->buffer[i].y, grid->side,
-                    grid->side, globalPackage->theme.colors[7]);
-    }
-  }
-
-  if (grid->hoverPos.x > -1 && grid->hoverPos.y > -1) {
-    DrawRectangleLines(grid->hoverPos.x, grid->hoverPos.y, grid->side,
-                       grid->side, globalPackage->theme.colors[7]);
-  }
+  // if (grid->hoverPos.x > -1 && grid->hoverPos.y > -1) {
+  //   DrawRectangleLines(grid->hoverPos.x, grid->hoverPos.y, grid->side,
+  //                      grid->side, globalPackage->theme.colors[7]);
+  // }
 }
 
 void grid_destroy(Grid **ptrGrid) {

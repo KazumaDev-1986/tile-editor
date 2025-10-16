@@ -18,10 +18,16 @@ static Grid *__grid = NULL;
 static Bar *__menuBar = NULL;
 static Bar *__statusBar = NULL;
 
+static RenderTexture __backaground;
+
 // **************************************************
 // Static function declaration.
 // **************************************************
 static void _reset_static_variables(void);
+
+static void _load_background(void);
+static void _draw_background(void);
+static void _unload_background(void);
 
 // **************************************************
 // Public functions implementation.
@@ -34,7 +40,7 @@ Screen *canvas_create(void) {
   _reset_static_variables();
   screen->type = SCREEN_TYPE_CANVAS;
 
-  __grid = grid_create(4, 4, 8);
+  __grid = grid_create(4, 4, TILE_EDITOR_TILE_SIZE);
   if (!__grid) {
     canvas_destroy(&screen);
     return NULL;
@@ -52,18 +58,19 @@ Screen *canvas_create(void) {
     return NULL;
   }
 
+  _load_background();
   return screen;
 }
 
 void canvas_update(Screen *const screen) {
   grid_update(__grid);
   menuBar_update(__menuBar);
-  // toolBar_update(__toolBar);
   statusBar_update(__statusBar);
 }
 
 void canvas_draw(const Screen *const screen) {
   ClearBackground(globalPackage->theme.colors[0]);
+  _draw_background();
   grid_draw(__grid);
   menuBar_draw(__menuBar);
   statusBar_draw(__statusBar);
@@ -73,6 +80,7 @@ ScreenType canvas_next_screen(void) { return __nextScreenType; }
 
 void canvas_destroy(Screen **ptrScreen) {
   if (ptrScreen && *ptrScreen) {
+    _unload_background();
     grid_destroy(&__grid);
     menuBar_destroy(&__menuBar);
     statusBar_destroy(&__statusBar);
@@ -84,6 +92,45 @@ void canvas_destroy(Screen **ptrScreen) {
 // **************************************************
 // Static function declaration.
 // **************************************************
+static void _load_background(void) {
+  int32_t width = TILE_EDITOR_VIRTUAL_SCREEN_WIDTH;
+  int32_t height = TILE_EDITOR_VIRTUAL_SCREEN_HEIGHT;
+
+  __backaground = LoadRenderTexture(width, height);
+
+  BeginTextureMode(__backaground);
+  ClearBackground(globalPackage->theme.colors[0]);
+
+  for (int32_t y = 0; y < height * 2; y += TILE_EDITOR_TILE_SIZE) {
+    DrawLine(0, y, width, y - width, globalPackage->theme.colors[1]);
+    DrawLine(0, y + 1, width, (y + 1) - width, globalPackage->theme.colors[1]);
+  }
+  DrawRectangle(0, 9, width, 1, globalPackage->theme.colors[0]);
+  DrawRectangle(0, height - 9, width, 1, globalPackage->theme.colors[6]);
+
+  EndTextureMode();
+}
+
+static void _draw_background(void) {
+  if (__backaground.id != 0) {
+    DrawTextureRec(__backaground.texture,
+                   (Rectangle){
+                       0,
+                       0,
+                       __backaground.texture.width,
+                       -__backaground.texture.height,
+
+                   },
+                   (Vector2){0, 0}, WHITE);
+  }
+}
+
+static void _unload_background(void) {
+  if (__backaground.id != 0) {
+    UnloadRenderTexture(__backaground);
+  }
+}
+
 static void _reset_static_variables(void) {
   __nextScreenType = SCREEN_TYPE_UNDEFINED;
   __grid = NULL;

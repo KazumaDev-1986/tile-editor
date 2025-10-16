@@ -2,6 +2,7 @@
 
 #include "include/app_state.h"
 #include "include/bar.h"
+#include "include/config.h"
 #include "include/package.h"
 
 extern Package *globalPackage;
@@ -10,7 +11,7 @@ extern AppState *globalAppState;
 // **************************************************
 // Static variables declaration.
 // **************************************************
-static const int32_t BAR_WIDTH = 8;
+static const int32_t BAR_HEIGHT = 8;
 
 // **************************************************
 // Static functions declaration.
@@ -55,8 +56,8 @@ void menuBar_destroy(Bar **ptrMenuBar) {
 // Static functions implementation.
 // **************************************************
 static void _initialize_variables(Bar *const menuBar) {
-  menuBar->size.x = globalAppState->screenWidth;
-  menuBar->size.y = BAR_WIDTH;
+  menuBar->size.x = TILE_EDITOR_VIRTUAL_SCREEN_WIDTH;
+  menuBar->size.y = BAR_HEIGHT;
   menuBar->position.x = 0;
   menuBar->position.y = 0;
   menuBar->background = globalPackage->theme.colors[8];

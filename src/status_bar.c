@@ -9,7 +9,7 @@ extern AppState *globalAppState;
 // **************************************************
 // Static variables declaration.
 // **************************************************
-static const int32_t BAR_WIDTH = 8;
+static const int32_t BAR_HEIGHT = 8;
 
 // **************************************************
 // Static functions declaration.
@@ -55,7 +55,7 @@ void statusBar_destroy(Bar **ptrStatusBar) {
 // **************************************************
 static void _initialize_variables(Bar *const statusBar) {
   statusBar->size.x = TILE_EDITOR_VIRTUAL_SCREEN_WIDTH;
-  statusBar->size.y = BAR_WIDTH;
+  statusBar->size.y = BAR_HEIGHT;
   statusBar->position.x = 0;
   statusBar->position.y = TILE_EDITOR_VIRTUAL_SCREEN_HEIGHT - statusBar->size.y;
   statusBar->background = globalPackage->theme.colors[8];
