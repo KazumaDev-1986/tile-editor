@@ -9,7 +9,7 @@ extern AppState *globalAppState;
 // **************************************************
 // Static variables declaration.
 // **************************************************
-static const int32_t BAR_WIDTH = 4;
+static const int32_t BAR_WIDTH = 8;
 
 // **************************************************
 // Static functions declaration.
@@ -58,7 +58,7 @@ static void _initialize_variables(Bar *const statusBar) {
   statusBar->size.y = BAR_WIDTH;
   statusBar->position.x = 0;
   statusBar->position.y = TILE_EDITOR_VIRTUAL_SCREEN_HEIGHT - statusBar->size.y;
-  statusBar->background = globalPackage->theme.colors[3];
+  statusBar->background = globalPackage->theme.colors[8];
 }
 
 static void _check_resize_screen(Bar *const statusBar) {

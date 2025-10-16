@@ -10,7 +10,7 @@ extern AppState *globalAppState;
 // **************************************************
 // Static variables declaration.
 // **************************************************
-static const int32_t BAR_WIDTH = 4;
+static const int32_t BAR_WIDTH = 8;
 
 // **************************************************
 // Static functions declaration.
@@ -59,7 +59,7 @@ static void _initialize_variables(Bar *const menuBar) {
   menuBar->size.y = BAR_WIDTH;
   menuBar->position.x = 0;
   menuBar->position.y = 0;
-  menuBar->background = globalPackage->theme.colors[3];
+  menuBar->background = globalPackage->theme.colors[8];
 }
 
 static void _check_resize_screen(Bar *const menuBar) {

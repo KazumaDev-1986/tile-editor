@@ -14,7 +14,7 @@ Package *globalPackage = NULL;
 // Static variables declaration.
 // **************************************************
 static bool __showFps = false;
-static RenderTexture2D __target = (RenderTexture2D){0};
+static RenderTexture2D __target;
 
 // **************************************************
 // Static functions declaration.

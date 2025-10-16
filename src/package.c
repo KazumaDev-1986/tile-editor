@@ -79,33 +79,20 @@ static void _unload_fonts(Font *fonts) {
 }
 
 static void _load_theme(Theme *theme) {
-  // Candy Castle Palette.
-  // theme->colors[0] = TILE_EDITOR_COLOR_CANDY_CASTLE_0;
-  // theme->colors[1] = TILE_EDITOR_COLOR_CANDY_CASTLE_1;
-  // theme->colors[2] = TILE_EDITOR_COLOR_CANDY_CASTLE_2;
-  // theme->colors[3] = TILE_EDITOR_COLOR_CANDY_CASTLE_3;
-  // theme->colors[4] = TILE_EDITOR_COLOR_CANDY_CASTLE_4;
-  // theme->colors[5] = TILE_EDITOR_COLOR_CANDY_CASTLE_5;
-  // theme->colors[6] = TILE_EDITOR_COLOR_CANDY_CASTLE_6;
-  // theme->colors[7] = TILE_EDITOR_COLOR_CANDY_CASTLE_7;
-
-  // Retrotronic DX Palette.
-  theme->colors[0] = TILE_EDITOR_COLOR_RETROTRONIC_DX_0;
-  theme->colors[1] = TILE_EDITOR_COLOR_RETROTRONIC_DX_1;
-  theme->colors[2] = TILE_EDITOR_COLOR_RETROTRONIC_DX_2;
-  theme->colors[3] = TILE_EDITOR_COLOR_RETROTRONIC_DX_3;
-  theme->colors[4] = TILE_EDITOR_COLOR_RETROTRONIC_DX_4;
-  theme->colors[5] = TILE_EDITOR_COLOR_RETROTRONIC_DX_5;
-  theme->colors[6] = TILE_EDITOR_COLOR_RETROTRONIC_DX_6;
-  theme->colors[7] = TILE_EDITOR_COLOR_RETROTRONIC_DX_7;
-
-  // // Funky Future Palette.
-  // theme->colors[0] = TILE_EDITOR_COLOR_FUNKY_FUTURE_0;
-  // theme->colors[1] = TILE_EDITOR_COLOR_FUNKY_FUTURE_1;
-  // theme->colors[2] = TILE_EDITOR_COLOR_FUNKY_FUTURE_2;
-  // theme->colors[3] = TILE_EDITOR_COLOR_FUNKY_FUTURE_3;
-  // theme->colors[4] = TILE_EDITOR_COLOR_FUNKY_FUTURE_4;
-  // theme->colors[5] = TILE_EDITOR_COLOR_FUNKY_FUTURE_5;
-  // theme->colors[6] = TILE_EDITOR_COLOR_FUNKY_FUTURE_6;
-  // theme->colors[7] = TILE_EDITOR_COLOR_FUNKY_FUTURE_7;
+  theme->colors[0] = TILE_EDITOR_COLOR_PICO8_0;
+  theme->colors[1] = TILE_EDITOR_COLOR_PICO8_1;
+  theme->colors[2] = TILE_EDITOR_COLOR_PICO8_2;
+  theme->colors[3] = TILE_EDITOR_COLOR_PICO8_3;
+  theme->colors[4] = TILE_EDITOR_COLOR_PICO8_4;
+  theme->colors[5] = TILE_EDITOR_COLOR_PICO8_5;
+  theme->colors[6] = TILE_EDITOR_COLOR_PICO8_6;
+  theme->colors[7] = TILE_EDITOR_COLOR_PICO8_7;
+  theme->colors[8] = TILE_EDITOR_COLOR_PICO8_8;
+  theme->colors[9] = TILE_EDITOR_COLOR_PICO8_9;
+  theme->colors[10] = TILE_EDITOR_COLOR_PICO8_10;
+  theme->colors[11] = TILE_EDITOR_COLOR_PICO8_11;
+  theme->colors[12] = TILE_EDITOR_COLOR_PICO8_12;
+  theme->colors[13] = TILE_EDITOR_COLOR_PICO8_13;
+  theme->colors[14] = TILE_EDITOR_COLOR_PICO8_14;
+  theme->colors[15] = TILE_EDITOR_COLOR_PICO8_15;
 }
