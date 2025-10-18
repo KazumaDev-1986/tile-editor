@@ -5,6 +5,13 @@
 
 #include "config.h"
 
+TILE_EDITOR typedef enum {
+  ZOOM_LEVEL_ONE = 1,
+  ZOOM_LEVEL_TWO = 2,
+  ZOOM_LEVEL_THREE = 3,
+  ZOOM_LEVEL_FOUR = 4,
+} ZoomLevel;
+
 TILE_EDITOR typedef struct {
   int32_t x;
   int32_t y;
@@ -17,8 +24,7 @@ TILE_EDITOR typedef struct {
   int32_t screenWidth;
   int32_t screenHeight;
   float baseAspect;
-  float zoom;
-  bool shouldUpdateScreen;
+  ZoomLevel zoom;
 } AppState;
 
 #if defined(__cplusplus)
@@ -29,7 +35,7 @@ TILE_EDITOR AppState *appState_create(void);
 
 TILE_EDITOR void appState_update(AppState *const state);
 
-TILE_EDITOR void appState_destroy(AppState **ptrState);
+TILE_EDITOR void appState_destroy(AppState **const ptrState);
 
 #if defined(__cplusplus)
 }

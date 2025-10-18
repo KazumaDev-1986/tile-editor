@@ -14,7 +14,6 @@ static const int32_t BAR_HEIGHT = 8;
 // **************************************************
 // Static functions declaration.
 // **************************************************
-static void _check_resize_screen(Bar *const statusBar);
 static void _initialize_variables(Bar *const statusBar);
 
 // **************************************************
@@ -30,7 +29,9 @@ Bar *statusBar_create(void) {
   return statusBar;
 }
 
-void statusBar_update(Bar *const statusBar) { _check_resize_screen(statusBar); }
+void statusBar_update(Bar *const statusBar) {
+  // TODO
+}
 
 void statusBar_draw(const Bar *const statusBar) {
   DrawRectangleRec(
@@ -59,10 +60,4 @@ static void _initialize_variables(Bar *const statusBar) {
   statusBar->position.x = 0;
   statusBar->position.y = TILE_EDITOR_VIRTUAL_SCREEN_HEIGHT - statusBar->size.y;
   statusBar->background = globalPackage->theme.colors[8];
-}
-
-static void _check_resize_screen(Bar *const statusBar) {
-  if (globalAppState->shouldUpdateScreen) {
-    _initialize_variables(statusBar);
-  }
 }

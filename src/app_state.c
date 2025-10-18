@@ -1,4 +1,3 @@
-#include <math.h>
 #include <stddef.h>
 
 #include "include/app_state.h"
@@ -21,8 +20,7 @@ AppState *appState_create(void) {
 
   state->screenWidth = GetScreenWidth();
   state->screenHeight = GetScreenHeight();
-  state->shouldUpdateScreen = false;
-  state->zoom = 1.f;
+  state->zoom = ZOOM_LEVEL_ONE;
   state->baseAspect = (float)TILE_EDITOR_VIRTUAL_SCREEN_WIDTH /
                       (float)TILE_EDITOR_VIRTUAL_SCREEN_HEIGHT;
   _initialize_view(state);
@@ -30,25 +28,10 @@ AppState *appState_create(void) {
   return state;
 }
 void appState_update(AppState *const state) {
-  int32_t newWidth = GetScreenWidth();
-  int32_t newHeight = GetScreenHeight();
-  state->shouldUpdateScreen = false;
-
-  if (state->screenWidth != newWidth || state->screenHeight != newHeight) {
-    state->screenWidth = newWidth;
-    state->screenHeight = newHeight;
-
-    float scaleX = (float)newWidth / TILE_EDITOR_VIRTUAL_SCREEN_WIDTH;
-    float scaleY = (float)newHeight / TILE_EDITOR_VIRTUAL_SCREEN_HEIGHT;
-
-    state->zoom = fminf(scaleX, scaleY);
-    state->shouldUpdateScreen = true;
-
-    _initialize_view(state);
-  }
+  // TODO
 }
 
-void appState_destroy(AppState **ptrState) {
+void appState_destroy(AppState **const ptrState) {
   if (ptrState && *ptrState) {
     MemFree(*ptrState);
     *ptrState = NULL;
