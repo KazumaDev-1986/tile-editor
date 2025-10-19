@@ -9,6 +9,8 @@
 #define TILE_EDITOR
 #define TILE_EDITOR_DEBUG
 
+// Screen setup.
+// -------------------------------------------------------------
 #define TILE_EDITOR_TITLE "Mika-Editor"
 #define TILE_EDITOR_SCREEN_WIDTH 800
 #define TILE_EDITOR_SCREEN_HEIGHT 600
@@ -17,31 +19,20 @@
 #define TILE_EDITOR_SCREEN_RESIZABLE 1
 #define TILE_EDITOR_SCREEN_FPS 30
 
-#define TILE_EDITOR_TILE_SIZE 8
+// TileMap setup.
+// -------------------------------------------------------------
+#define TILE_EDITOR_TILE_AREA 64
+#define TILE_EDITOR_TILE_MAP_AREA 4 
 
-#define TILE_EDITOR_TILE_TOTAL 4
-#define TILE_EDITOR_TILE_WIDTH 2
-#define TILE_EDITOR_TILE_HEIGHT 2
-
-#define TILE_EDITOR_PIXEL_TOTAL 8
-#define TILE_EDITOR_PIXEL_WIDTH 4
-#define TILE_EDITOR_PIXEL_HEIGHT 4
-
-#define TILE_EDITOR_MAP_WIDTH 128
-#define TILE_EDITOR_MAP_HEIGHT 64
-
-#define TILE_EDITOR_CAMERA_MOVE_SPEED 100.f
-#define TILE_EDITOR_CAMERA_ZOOM_WHEEL_DIFF 1
-#define TILE_EDITOR_CAMERA_ZOOM_MIN 2
-#define TILE_EDITOR_CAMERA_ZOOM_MAX 4
-
+// Package setup.
+// -------------------------------------------------------------
 #define TILE_EDITOR_PACKAGE_FONT_SIZE 2
 #define TILE_EDITOR_PACKAGE_FONT_04b_03 "data/fonts/04b_03/04B_03__.TTF"
 #define TILE_EDITOR_PACKAGE_FONT_BM_MINI "data/fonts/bm_mini/BMmini.TTF"
 
+// Palette setup.
+// -------------------------------------------------------------
 #define TILE_EDITOR_COLOR_PALETTE_SIZE 16
-
-// PICO-8 Palette (official order)
 #define TILE_EDITOR_COLOR_PICO8_0 (Color){0, 0, 0, 255}        // #000000
 #define TILE_EDITOR_COLOR_PICO8_1 (Color){29, 43, 83, 255}     // #1D2B53
 #define TILE_EDITOR_COLOR_PICO8_2 (Color){126, 37, 83, 255}    // #7E2553

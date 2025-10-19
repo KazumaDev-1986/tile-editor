@@ -10,11 +10,15 @@ TILE_EDITOR typedef struct {
 } Pixel;
 
 TILE_EDITOR typedef struct {
-  Pixel pixels[TILE_EDITOR_PIXEL_TOTAL];
+  size_t width;
+  size_t height;
+  Pixel pixels[TILE_EDITOR_TILE_AREA];
 } Tile;
 
 TILE_EDITOR typedef struct {
-  Tile tiles[TILE_EDITOR_TILE_TOTAL];
+  size_t width;
+  size_t height;
+  Tile tiles[TILE_EDITOR_TILE_MAP_AREA];
 } TileMap;
 
 #if defined(__cplusplus)

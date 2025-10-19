@@ -68,10 +68,10 @@ void canvas_update(Screen *const screen) {
 
 void canvas_draw(const Screen *const screen) {
   ClearBackground(globalPackage->theme.colors[0]);
-  _draw_background();
+  // _draw_background();
   tileMap_draw(__tileMap);
-  menuBar_draw(__menuBar);
-  statusBar_draw(__statusBar);
+  // menuBar_draw(__menuBar);
+  // statusBar_draw(__statusBar);
 }
 
 ScreenType canvas_next_screen(void) { return __nextScreenType; }
@@ -99,7 +99,7 @@ static void _load_background(void) {
   BeginTextureMode(__backaground);
   ClearBackground(globalPackage->theme.colors[0]);
 
-  for (int32_t y = 0; y < height * 2; y += TILE_EDITOR_TILE_SIZE) {
+  for (int32_t y = 0; y < height * 2; y += 8) {
     DrawLine(0, y, width, y - width, globalPackage->theme.colors[1]);
     DrawLine(0, y + 1, width, (y + 1) - width, globalPackage->theme.colors[1]);
   }
