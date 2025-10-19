@@ -16,9 +16,15 @@ TILE_EDITOR typedef struct {
 } Tile;
 
 TILE_EDITOR typedef struct {
+  int32_t x;
+  int32_t y;
+} Offset;
+
+TILE_EDITOR typedef struct {
   size_t width;
   size_t height;
   Tile tiles[TILE_EDITOR_TILE_MAP_AREA];
+  Offset offset;
 } TileMap;
 
 #if defined(__cplusplus)
