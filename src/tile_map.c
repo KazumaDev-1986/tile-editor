@@ -19,7 +19,7 @@ static void _draw_tile(const Tile *const tile, Offset offset);
 // **************************************************
 // Public functions implementation.
 // **************************************************
-TILE_EDITOR TileMap *tileMap_create(void) {
+*tileMap_create(void) {
   TileMap *tileMap = MemAlloc(sizeof(TileMap));
   if (!tileMap) {
     return NULL;
@@ -29,7 +29,7 @@ TILE_EDITOR TileMap *tileMap_create(void) {
   return tileMap;
 }
 
-TILE_EDITOR void tileMap_update(TileMap *const tileMap) {
+void tileMap_update(TileMap *const tileMap) {
   if (IsKeyDown(KEY_UP)) {
     tileMap->offset.y += 8;
   }
@@ -44,11 +44,11 @@ TILE_EDITOR void tileMap_update(TileMap *const tileMap) {
   }
 }
 
-TILE_EDITOR void tileMap_draw(const TileMap *const tileMap) {
+void tileMap_draw(const TileMap *const tileMap) {
   _draw_tileMap(tileMap);
 }
 
-TILE_EDITOR void tileMap_destroy(TileMap **const ptrTileMap) {
+void tileMap_destroy(TileMap **const ptrTileMap) {
   if (ptrTileMap && *ptrTileMap) {
     MemFree(*ptrTileMap);
     *ptrTileMap = NULL;
@@ -67,7 +67,7 @@ static void _initialize_tileMap(TileMap *tileMap) {
   for (size_t ty = 0; ty < tileMap->height; ++ty) {
     for (size_t tx = 0; tx < tileMap->width; ++tx) {
       Tile *tile = &tileMap->tiles[ty * tileMap->width + tx];
-      _initialize_tile(tile, tx, ty);
+      _initialize_tile(tile, tx, ty + 1);
     }
   }
 }
@@ -104,8 +104,9 @@ static void _draw_tile(const Tile *const tile, Offset offset) {
       size_t index = py * tile->width + px;
       const Pixel *const pixel = &tile->pixels[index];
 
-      DrawRectangle((pixel->x - offset.x) * zoom, (pixel->y - offset.y) * zoom,
-                    zoom, zoom, pixel->color);
+      float x = (pixel->x - offset.x) * zoom;
+      float y = (pixel->y - offset.y) * zoom;
+      DrawRectangle(x, y, zoom, zoom, pixel->color);
     }
   }
 }
