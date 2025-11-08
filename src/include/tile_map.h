@@ -12,7 +12,7 @@ TILE_EDITOR typedef struct {
 TILE_EDITOR typedef struct {
   size_t width;
   size_t height;
-  Pixel pixels[TILE_EDITOR_TILE_AREA];
+  Pixel pixels[TILE_EDITOR_TILE_MAP_PIXEL_LIST_WIDTH * TILE_EDITOR_TILE_MAP_PIXEL_LIST_HEIGHT];
 } Tile;
 
 TILE_EDITOR typedef struct {
@@ -23,7 +23,8 @@ TILE_EDITOR typedef struct {
 TILE_EDITOR typedef struct {
   size_t width;
   size_t height;
-  Tile tiles[TILE_EDITOR_TILE_MAP_AREA];
+  Tile tiles[TILE_EDITOR_TILE_MAP_TILE_LIST_WIDTH *
+             TILE_EDITOR_TILE_MAP_TILE_LIST_HEIGHT];
   Offset offset;
 } TileMap;
 
@@ -42,6 +43,5 @@ TILE_EDITOR void tileMap_destroy(TileMap **const ptrTileMap);
 #if defined(__cplusplus)
 }
 #endif
-
 
 #endif // TILE_EDITOR_TILE_MAP_H

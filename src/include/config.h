@@ -21,8 +21,10 @@
 
 // TileMap setup.
 // -------------------------------------------------------------
-#define TILE_EDITOR_TILE_AREA 64
-#define TILE_EDITOR_TILE_MAP_AREA 4 
+#define TILE_EDITOR_TILE_MAP_PIXEL_LIST_WIDTH 8
+#define TILE_EDITOR_TILE_MAP_PIXEL_LIST_HEIGHT 8
+#define TILE_EDITOR_TILE_MAP_TILE_LIST_WIDTH 6
+#define TILE_EDITOR_TILE_MAP_TILE_LIST_HEIGHT 2
 
 // Package setup.
 // -------------------------------------------------------------
