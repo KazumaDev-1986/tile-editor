@@ -44,6 +44,8 @@ void menuBar_draw(const Bar *const menuBar) {
           menuBar->size.y,
       },
       menuBar->background);
+  DrawRectangle(0, 8, TILE_EDITOR_VIRTUAL_SCREEN_WIDTH, 1,
+                globalPackage->theme.colors[0]);
 }
 
 void menuBar_destroy(Bar **ptrMenuBar) {

@@ -1,8 +1,8 @@
+#include "include/tile_map.h"
 #include "include/app_state.h"
 #include "include/config.h"
 #include "include/package.h"
 #include "include/raylib.h"
-#include "include/tile_map.h"
 
 extern Package *globalPackage;
 extern AppState *globalAppState;
@@ -24,6 +24,9 @@ static void _draw_tile(const Tile *const tile, Offset offset, size_t spaceX,
 static void _keyboatd_events(TileMap *const tileMap);
 static void _get_mouse_position(void);
 static void _reset_static_variables(void);
+static void _draw_background_grid(const TileMap *const tileMap);
+static void _draw_grid_hover(const Tile *const tile, Offset offset,
+                             size_t diffX, size_t diffY);
 
 // **************************************************
 // Public functions implementation.
@@ -43,7 +46,10 @@ void tileMap_update(TileMap *const tileMap) {
   _get_mouse_position();
 }
 
-void tileMap_draw(const TileMap *const tileMap) { _draw_tileMap(tileMap); }
+void tileMap_draw(const TileMap *const tileMap) {
+  _draw_background_grid(tileMap);
+  _draw_tileMap(tileMap);
+}
 
 void tileMap_destroy(TileMap **const ptrTileMap) {
   if (ptrTileMap && *ptrTileMap) {
@@ -83,7 +89,7 @@ static void _initialize_tile(Tile *const tile, size_t tx, size_t ty) {
       size_t index = py * tile->width + px;
       tile->pixels[index].x = tx * tile->width + px;
       tile->pixels[index].y = ty * tile->height + py;
-      tile->pixels[index].color = globalPackage->theme.colors[7];
+      tile->pixels[index].color = globalPackage->theme.colors[0];
     }
   }
 }
@@ -104,16 +110,6 @@ static void _draw_tile(const Tile *const tile, Offset offset, size_t spaceX,
   size_t diffX = __showGrid ? spaceX : 0;
   size_t diffY = __showGrid ? spaceY : 0;
 
-  Color color = WHITE;
-  Rectangle rec = (Rectangle){(tile->pixels[0].x - offset.x + diffX) * zoom,
-                              (tile->pixels[0].y - offset.y + diffY) * zoom,
-                              TILE_EDITOR_TILE_MAP_PIXEL_LIST_WIDTH * zoom,
-                              TILE_EDITOR_TILE_MAP_PIXEL_LIST_HEIGHT * zoom};
-
-  if (CheckCollisionPointRec(__mousePosition, rec)) {
-    color = RED;
-  }
-
   for (size_t py = 0; py < tile->height; ++py) {
     for (size_t px = 0; px < tile->width; ++px) {
       size_t index = py * tile->width + px;
@@ -121,14 +117,11 @@ static void _draw_tile(const Tile *const tile, Offset offset, size_t spaceX,
 
       size_t x = (pixel->x - offset.x + diffX) * zoom;
       size_t y = (pixel->y - offset.y + diffY) * zoom;
-      DrawRectangle(x, y, zoom, zoom, color);
+      DrawRectangle(x, y, zoom, zoom, pixel->color);
     }
   }
 
-  DrawLine(__mousePosition.x - 10, __mousePosition.y, __mousePosition.x + 10,
-           __mousePosition.y, RED);
-  DrawLine(__mousePosition.x, __mousePosition.y - 10, __mousePosition.x,
-           __mousePosition.y + 10, GREEN);
+  _draw_grid_hover(tile, offset, diffX, diffY);
 }
 
 static void _keyboatd_events(TileMap *const tileMap) {
@@ -148,6 +141,7 @@ static void _keyboatd_events(TileMap *const tileMap) {
     __showGrid = !__showGrid;
   }
 }
+
 static void _get_mouse_position(void) {
   Vector2 mouse = GetMousePosition();
 
@@ -162,5 +156,32 @@ static void _get_mouse_position(void) {
                         TILE_EDITOR_VIRTUAL_SCREEN_WIDTH;
     __mousePosition.y = (localY / globalAppState->view.height) *
                         TILE_EDITOR_VIRTUAL_SCREEN_HEIGHT;
+  }
+}
+
+static void _draw_background_grid(const TileMap *const tileMap) {
+  const Tile *const tile = &tileMap->tiles[0];
+  ZoomLevel zoom = globalAppState->zoom;
+
+  size_t x = (tile->pixels[0].x - tileMap->offset.x) * zoom;
+  size_t y = (tile->pixels[0].y - tileMap->offset.y) * zoom;
+  size_t width = 8 * TILE_EDITOR_TILE_MAP_TILE_LIST_WIDTH * zoom;
+  size_t height = 8 * TILE_EDITOR_TILE_MAP_TILE_LIST_HEIGHT * zoom;
+
+  DrawRectangle(x - 1, y - 1, width + 2, height + 2,
+                globalPackage->theme.colors[5]);
+  DrawRectangle(x, y, width, height, globalPackage->theme.colors[0]);
+}
+
+static void _draw_grid_hover(const Tile *const tile, Offset offset,
+                             size_t diffX, size_t diffY) {
+  ZoomLevel zoom = globalAppState->zoom;
+  Rectangle rec = (Rectangle){(tile->pixels[0].x - offset.x + diffX) * zoom,
+                              (tile->pixels[0].y - offset.y + diffY) * zoom,
+                              TILE_EDITOR_TILE_MAP_PIXEL_LIST_WIDTH * zoom,
+                              TILE_EDITOR_TILE_MAP_PIXEL_LIST_HEIGHT * zoom};
+
+  if (CheckCollisionPointRec(__mousePosition, rec)) {
+    DrawRectangleLinesEx(rec, 1.f, globalPackage->theme.colors[6]);
   }
 }

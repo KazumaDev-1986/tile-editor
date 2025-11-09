@@ -70,7 +70,7 @@ void canvas_draw(const Screen *const screen) {
   ClearBackground(globalPackage->theme.colors[0]);
   _draw_background();
   tileMap_draw(__tileMap);
-  
+
   menuBar_draw(__menuBar);
   statusBar_draw(__statusBar);
 }
@@ -104,8 +104,6 @@ static void _load_background(void) {
     DrawLine(0, y, width, y - width, globalPackage->theme.colors[1]);
     DrawLine(0, y + 1, width, (y + 1) - width, globalPackage->theme.colors[1]);
   }
-  DrawRectangle(0, 8, width, 1, globalPackage->theme.colors[0]);
-  DrawRectangle(0, height - 9, width, 1, globalPackage->theme.colors[6]);
 
   EndTextureMode();
 }
