@@ -70,12 +70,9 @@ void canvas_draw(const Screen *const screen) {
   ClearBackground(globalPackage->theme.colors[0]);
   _draw_background();
   tileMap_draw(__tileMap);
-  DrawRectangle(0, 0, 1, 1, RED);
+  
   menuBar_draw(__menuBar);
   statusBar_draw(__statusBar);
-
-  // DrawRectangle(-10, 2, 20, 1, RED);
-  // DrawRectangle(2, -10, 1, 20, GREEN);
 }
 
 ScreenType canvas_next_screen(void) { return __nextScreenType; }
