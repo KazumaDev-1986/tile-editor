@@ -23,8 +23,8 @@
 // -------------------------------------------------------------
 #define TILE_EDITOR_TILE_MAP_PIXEL_LIST_WIDTH 8
 #define TILE_EDITOR_TILE_MAP_PIXEL_LIST_HEIGHT 8
-#define TILE_EDITOR_TILE_MAP_TILE_LIST_WIDTH 16
-#define TILE_EDITOR_TILE_MAP_TILE_LIST_HEIGHT 16
+#define TILE_EDITOR_TILE_MAP_TILE_LIST_WIDTH 128
+#define TILE_EDITOR_TILE_MAP_TILE_LIST_HEIGHT 64
 
 // Package setup.
 // -------------------------------------------------------------

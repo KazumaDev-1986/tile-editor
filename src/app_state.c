@@ -33,6 +33,10 @@ void appState_update(AppState *const state) {
   _check_resize_screen(state);
 }
 
+void appState_setZoom(AppState *const state, int32_t value) {
+  state->zoom = _getZoomLevelByNumber(value);
+}
+
 void appState_destroy(AppState **const ptrState) {
   if (ptrState && *ptrState) {
     MemFree(*ptrState);
@@ -63,9 +67,9 @@ static void _initialize_view(AppState *const state) {
 }
 
 static void _keyboard_events(AppState *const state) {
-  if (IsKeyPressed(KEY_K)) {
+  if (IsKeyPressed(KEY_K) || IsKeyPressed(KEY_KP_ADD)) {
     state->zoom = _getZoomLevelByNumber(state->zoom + 1);
-  } else if (IsKeyPressed(KEY_J)) {
+  } else if (IsKeyPressed(KEY_J) || IsKeyPressed(KEY_KP_SUBTRACT)) {
     state->zoom = _getZoomLevelByNumber(state->zoom - 1);
   }
 }
@@ -81,6 +85,7 @@ static ZoomLevel _getZoomLevelByNumber(int32_t value) {
 
   return (ZoomLevel)value;
 }
+
 static void _check_resize_screen(AppState *const state) {
   bool isScreenWidthChanged = state->screenWidth != GetScreenWidth();
   bool isScreenHeightChanged = state->screenHeight != GetScreenHeight();

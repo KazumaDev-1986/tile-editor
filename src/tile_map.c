@@ -10,6 +10,7 @@ extern AppState *globalAppState;
 // Static variables declaration.
 // **************************************************
 static const size_t __VELOCITY = 8;
+static float __wheelCounter = 0;
 static bool __showGrid = false;
 static Vector2 __mousePosition = (Vector2){0};
 
@@ -22,11 +23,12 @@ static void _draw_tileMap(const TileMap *const tileMap);
 static void _draw_tile(const Tile *const tile, Offset offset, size_t spaceX,
                        size_t spaceY);
 static void _keyboatd_events(TileMap *const tileMap);
+static void _mouse_events(TileMap *const tileMap);
 static void _get_mouse_position(void);
-static void _reset_static_variables(void);
 static void _draw_background_grid(const TileMap *const tileMap);
 static void _draw_grid_hover(const Tile *const tile, Offset offset,
                              size_t diffX, size_t diffY);
+static void _reset_static_variables(void);
 
 // **************************************************
 // Public functions implementation.
@@ -43,6 +45,7 @@ TileMap *tileMap_create(void) {
 
 void tileMap_update(TileMap *const tileMap) {
   _keyboatd_events(tileMap);
+  _mouse_events(tileMap);
   _get_mouse_position();
 }
 
@@ -64,6 +67,7 @@ void tileMap_destroy(TileMap **const ptrTileMap) {
 static void _reset_static_variables(void) {
   __showGrid = false;
   __mousePosition = (Vector2){0};
+  __wheelCounter = 0;
 }
 
 static void _initialize_tileMap(TileMap *tileMap) {
@@ -126,19 +130,41 @@ static void _draw_tile(const Tile *const tile, Offset offset, size_t spaceX,
 
 static void _keyboatd_events(TileMap *const tileMap) {
   if (IsKeyPressed(KEY_UP)) {
-    tileMap->offset.y += __VELOCITY;
-  }
-  if (IsKeyPressed(KEY_RIGHT)) {
-    tileMap->offset.x -= __VELOCITY;
-  }
-  if (IsKeyPressed(KEY_DOWN)) {
     tileMap->offset.y -= __VELOCITY;
   }
-  if (IsKeyPressed(KEY_LEFT)) {
+  if (IsKeyPressed(KEY_RIGHT)) {
     tileMap->offset.x += __VELOCITY;
+  }
+  if (IsKeyPressed(KEY_DOWN)) {
+    tileMap->offset.y += __VELOCITY;
+  }
+  if (IsKeyPressed(KEY_LEFT)) {
+    tileMap->offset.x -= __VELOCITY;
   }
   if (IsKeyPressed(KEY_G)) {
     __showGrid = !__showGrid;
+  }
+}
+
+static void _mouse_events(TileMap *const tileMap) {
+  if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)) {
+    Vector2 mouseDelta = GetMouseDelta();
+    ZoomLevel zoom = globalAppState->zoom;
+    float speed = 0.3f;
+
+    tileMap->offset.x -= mouseDelta.x * speed / zoom;
+    tileMap->offset.y -= mouseDelta.y * speed / zoom;
+  }
+
+  float wheel = GetMouseWheelMove();
+  if (wheel != 0) {
+    __wheelCounter += wheel * 0.4f;
+    if (__wheelCounter < ZOOM_LEVEL_ONE)
+      __wheelCounter = ZOOM_LEVEL_ONE;
+    if (__wheelCounter > ZOOM_LEVEL_FOUR)
+      __wheelCounter = ZOOM_LEVEL_FOUR;
+
+    appState_setZoom(globalAppState, (int32_t)__wheelCounter);
   }
 }
 
@@ -165,11 +191,14 @@ static void _draw_background_grid(const TileMap *const tileMap) {
 
   size_t x = (tile->pixels[0].x - tileMap->offset.x) * zoom;
   size_t y = (tile->pixels[0].y - tileMap->offset.y) * zoom;
-  size_t width = 8 * TILE_EDITOR_TILE_MAP_TILE_LIST_WIDTH * zoom;
-  size_t height = 8 * TILE_EDITOR_TILE_MAP_TILE_LIST_HEIGHT * zoom;
+  size_t width = TILE_EDITOR_TILE_MAP_PIXEL_LIST_WIDTH *
+                 TILE_EDITOR_TILE_MAP_TILE_LIST_WIDTH * zoom;
+  size_t height = TILE_EDITOR_TILE_MAP_PIXEL_LIST_HEIGHT *
+                  TILE_EDITOR_TILE_MAP_TILE_LIST_HEIGHT * zoom;
 
+  // Info:Padding background.
   DrawRectangle(x - 1, y - 1, width + 2, height + 2,
-                globalPackage->theme.colors[5]);
+                globalPackage->theme.colors[7]);
   DrawRectangle(x, y, width, height, globalPackage->theme.colors[0]);
 }
 

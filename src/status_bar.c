@@ -44,7 +44,7 @@ void statusBar_draw(const Bar *const statusBar) {
       statusBar->background);
   DrawRectangle(0, TILE_EDITOR_VIRTUAL_SCREEN_HEIGHT - 9,
                 TILE_EDITOR_VIRTUAL_SCREEN_WIDTH, 1,
-                globalPackage->theme.colors[6]);
+                globalPackage->theme.colors[5]);
 }
 
 void statusBar_destroy(Bar **ptrStatusBar) {

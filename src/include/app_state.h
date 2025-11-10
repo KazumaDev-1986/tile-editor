@@ -35,6 +35,10 @@ TILE_EDITOR AppState *appState_create(void);
 
 TILE_EDITOR void appState_update(AppState *const state);
 
+TILE_EDITOR void appState_setZoom(AppState *const state, int32_t value);
+
+TILE_EDITOR ZoomLevel getZoomLevelByNumber(int32_t value);
+
 TILE_EDITOR void appState_destroy(AppState **const ptrState);
 
 #if defined(__cplusplus)
